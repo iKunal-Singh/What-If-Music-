@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, Music, Youtube, Search } from "lucide-react";
+import { Menu, X, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import CookieConsent from "../common/CookieConsent";
@@ -42,8 +42,16 @@ const Header = () => {
       >
         <div className="container flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <Music className="h-8 w-8 text-beatwave-500" />
-            <span className="text-2xl font-bold tracking-tight">BeatWave</span>
+            <div className="relative group h-12 w-auto flex items-center">
+              <img 
+                src="/lovable-uploads/5bfad9b6-69b5-43f3-80c6-1d185723487c.png" 
+                alt="WHAT IF MUSIC?" 
+                className="h-full object-contain transform transition-transform duration-300 group-hover:scale-105"
+              />
+            </div>
+            <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-fuchsia-600 to-purple-400 bg-clip-text text-transparent">
+              WHAT IF MUSIC?
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -52,7 +60,7 @@ const Header = () => {
               <Link
                 key={link.name}
                 to={link.path}
-                className="text-foreground/90 hover:text-beatwave-500 transition-colors"
+                className="text-foreground/90 hover:text-fuchsia-500 transition-colors font-medium"
               >
                 {link.name}
               </Link>
@@ -63,8 +71,7 @@ const Header = () => {
             <Button variant="outline" size="icon">
               <Search className="h-4 w-4" />
             </Button>
-            <Button>
-              <Youtube className="mr-2 h-4 w-4" />
+            <Button className="bg-gradient-to-r from-fuchsia-600 to-purple-500 hover:from-fuchsia-700 hover:to-purple-600">
               Subscribe
             </Button>
           </div>
@@ -88,14 +95,13 @@ const Header = () => {
                 <Link
                   key={link.name}
                   to={link.path}
-                  className="text-xl font-medium border-b border-border pb-2 hover:text-beatwave-500 transition-colors"
+                  className="text-xl font-medium border-b border-border pb-2 hover:text-fuchsia-500 transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
                   {link.name}
                 </Link>
               ))}
-              <Button className="mt-4">
-                <Youtube className="mr-2 h-4 w-4" />
+              <Button className="mt-4 bg-gradient-to-r from-fuchsia-600 to-purple-500 hover:from-fuchsia-700 hover:to-purple-600">
                 Subscribe
               </Button>
               <Button variant="outline">
