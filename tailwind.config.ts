@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,20 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				beatwave: {
+					DEFAULT: '#E34234',
+					50: '#FBD4D0',
+					100: '#F9C1BC',
+					200: '#F59B93',
+					300: '#F0756B',
+					400: '#EC5042',
+					500: '#E34234',
+					600: '#B62919',
+					700: '#851E12',
+					800: '#55130C',
+					900: '#240805',
+					950: '#100302'
 				}
 			},
 			borderRadius: {
@@ -70,25 +85,38 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
+				},
+				'pulse-slow': {
+					'0%, 100%': { opacity: '0.9' },
+					'50%': { opacity: '0.5' }
+				},
+				'wave': {
+					'0%': { transform: 'scaleY(0.5)' },
+					'50%': { transform: 'scaleY(1)' },
+					'100%': { transform: 'scaleY(0.5)' }
+				},
+				'fade-in': {
+					'0%': { opacity: '0', transform: 'translateY(10px)' },
+					'100%': { opacity: '1', transform: 'translateY(0)' }
+				},
+				'hover-glow': {
+					'0%': { boxShadow: '0 0 5px rgba(227, 66, 52, 0.5)' },
+					'100%': { boxShadow: '0 0 15px rgba(227, 66, 52, 0.8)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
+				'wave': 'wave 1.2s ease-in-out infinite',
+				'fade-in': 'fade-in 0.3s ease-out',
+				'hover-glow': 'hover-glow 1.5s ease-in-out infinite alternate'
 			}
 		}
 	},
