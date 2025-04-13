@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Music, Disc3, Image, ArrowRight } from "lucide-react";
@@ -36,6 +37,15 @@ const featuredBeats = [{
   bpm: 128,
   key: "G Minor",
   tags: ["Techno", "EDM", "Club"]
+}, {
+  id: "beat4",
+  title: "Mellow Sunset",
+  producer: "BeatWave",
+  image: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80",
+  audioUrl: "/path-to-audio.mp3",
+  bpm: 90,
+  key: "C Major",
+  tags: ["Lo-Fi", "Chill", "Study"]
 }];
 const featuredRemixes = [{
   id: "remix1",
@@ -128,7 +138,7 @@ const Index = () => {
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredBeats.map(beat => <BeatCard key={beat.id} {...beat} />)}
           </div>
 
