@@ -77,15 +77,23 @@ const CoverArt = () => {
       <Header />
       
       {/* Page Header */}
-      <section className="py-12 px-4 bg-secondary/30">
-        <div className="container mx-auto">
+      <section 
+        className="py-12 px-4 relative"
+        style={{
+          backgroundImage: "url('/lovable-uploads/9343b022-ea9b-427f-a882-3f125542e521.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="container mx-auto relative z-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold mb-2 flex items-center gap-2">
+              <h1 className="text-3xl md:text-4xl font-bold mb-2 flex items-center gap-2 text-white">
                 <Image className="text-beatwave-500" />
                 Cover Art
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-white">
                 High-quality artwork for your music and content
               </p>
             </div>

@@ -123,15 +123,23 @@ const Beats = () => {
       <Header />
       
       {/* Page Header */}
-      <section className="py-12 px-4 bg-secondary/30">
-        <div className="container mx-auto">
+      <section 
+        className="py-12 px-4 relative" 
+        style={{
+          backgroundImage: "url('/lovable-uploads/8b71d971-66f8-4aef-a3b9-dfa4dc69011b.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="container mx-auto relative z-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold mb-2 flex items-center gap-2">
+              <h1 className="text-3xl md:text-4xl font-bold mb-2 flex items-center gap-2 text-white">
                 <Music className="text-beatwave-500" />
                 Beats
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-white">
                 Browse and download free beats for your next project
               </p>
             </div>

@@ -107,15 +107,23 @@ const Index = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="py-12 md:py-24 px-4">
-        <div className="container mx-auto">
+      <section 
+        className="py-12 md:py-24 px-4 relative" 
+        style={{
+          backgroundImage: "url('/lovable-uploads/8e577b0f-aefc-4105-8149-88d723a4d42e.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="container mx-auto relative z-10">
           <AdBanner type="header" className="mb-8" />
           
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-beatwave-400 to-beatwave-600 bg-clip-text text-transparent">
               Free Beats & Remixes for Content Creators
             </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-white mb-8 max-w-2xl mx-auto">
               Download high-quality royalty-free beats, remixes, and cover art for your videos, podcasts, and creative projects.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
