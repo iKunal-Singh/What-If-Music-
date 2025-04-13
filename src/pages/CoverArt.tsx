@@ -70,7 +70,7 @@ const coverArtItems = [
 
 const CoverArt = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [gridColumns, setGridColumns] = useState(3);
+  const [gridColumns, setGridColumns] = useState(4);
 
   return (
     <div className="min-h-screen">

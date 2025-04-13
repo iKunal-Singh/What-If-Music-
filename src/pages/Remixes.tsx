@@ -116,13 +116,13 @@ const Remixes = () => {
         <div className="container mx-auto">
           <AdBanner type="header" className="mb-8" />
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {remixes.map((remix, index) => (
               <React.Fragment key={remix.id}>
                 <RemixCard {...remix} />
                 {/* Insert ad after every 4 remixes */}
                 {(index + 1) % 4 === 0 && index !== 0 && index !== remixes.length - 1 && (
-                  <AdBanner type="content" className="md:col-span-2 my-2" />
+                  <AdBanner type="content" className="md:col-span-4 my-2" />
                 )}
               </React.Fragment>
             ))}

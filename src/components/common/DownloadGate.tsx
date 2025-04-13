@@ -79,7 +79,7 @@ const DownloadGate = ({ title, fileType, onDownload }: DownloadGateProps) => {
     <>
       <Button onClick={handleOpen} className="flex gap-2">
         <Download size={18} />
-        Download {fileType}
+        Download
       </Button>
       
       <Dialog open={open} onOpenChange={setOpen}>

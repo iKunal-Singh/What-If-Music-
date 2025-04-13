@@ -262,13 +262,13 @@ const Beats = () => {
             </div>
           )}
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {beats.map((beat, index) => (
               <React.Fragment key={beat.id}>
                 <BeatCard {...beat} />
-                {/* Insert ad after every 3 beats */}
-                {(index + 1) % 3 === 0 && index !== 0 && index !== beats.length - 1 && (
-                  <AdBanner type="content" className="lg:col-span-3 my-2" />
+                {/* Insert ad after every 4 beats */}
+                {(index + 1) % 4 === 0 && index !== 0 && index !== beats.length - 1 && (
+                  <AdBanner type="content" className="lg:col-span-4 my-2" />
                 )}
               </React.Fragment>
             ))}

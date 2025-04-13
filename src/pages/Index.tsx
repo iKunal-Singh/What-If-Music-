@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Music, Disc3, Image, ArrowRight } from "lucide-react";
@@ -61,7 +60,22 @@ const featuredRemixes = [{
   originalArtist: "Megan Thee Stallion",
   youtubeId: "4NRXx6U8ABQ",
   tags: ["Hip Hop", "Trap", "Remix"]
+}, {
+  id: "remix3",
+  title: "Levitating Remix",
+  remixer: "BeatWave",
+  originalArtist: "Dua Lipa",
+  youtubeId: "4NRXx6U8ABQ",
+  tags: ["Dance", "Pop", "Club"]
+}, {
+  id: "remix4",
+  title: "Mood Remix",
+  remixer: "BeatWave",
+  originalArtist: "24kGoldn",
+  youtubeId: "4NRXx6U8ABQ",
+  tags: ["Hip Hop", "Alternative", "Pop"]
 }];
+
 const Index = () => {
   // List of genres with their corresponding icons and colors
   const genres = [{
@@ -159,7 +173,7 @@ const Index = () => {
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredRemixes.map(remix => <RemixCard key={remix.id} {...remix} />)}
           </div>
         </div>
