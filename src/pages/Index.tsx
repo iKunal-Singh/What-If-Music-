@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Music, Disc3, Image, ArrowRight } from "lucide-react";
@@ -10,71 +9,77 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 // Sample data - replace with real data from backend/API
-const featuredBeats = [
-  {
-    id: "beat1",
-    title: "Utopia Vibes",
-    producer: "BeatWave",
-    image: "/lovable-uploads/a7fff71b-527c-4120-8fec-0607c49ea7c9.png",
-    audioUrl: "/path-to-audio.mp3",
-    bpm: 140,
-    key: "A Minor",
-    tags: ["Hip Hop", "Travis Scott Type", "Dark"],
-  },
-  {
-    id: "beat2",
-    title: "Midnight Dreams",
-    producer: "BeatWave",
-    image: "https://images.unsplash.com/photo-1511497584788-876760111969?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1642&q=80",
-    audioUrl: "/path-to-audio.mp3",
-    bpm: 95,
-    key: "F Major",
-    tags: ["Chill", "Drake Type", "R&B"],
-  },
-  {
-    id: "beat3",
-    title: "Future Bounce",
-    producer: "BeatWave",
-    image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2574&q=80",
-    audioUrl: "/path-to-audio.mp3",
-    bpm: 128,
-    key: "G Minor",
-    tags: ["Techno", "EDM", "Club"],
-  },
-];
-
-const featuredRemixes = [
-  {
-    id: "remix1",
-    title: "Blinding Lights Remix",
-    remixer: "BeatWave",
-    originalArtist: "The Weeknd",
-    youtubeId: "4NRXx6U8ABQ",
-    tags: ["EDM", "Remix", "Pop"],
-  },
-  {
-    id: "remix2",
-    title: "Savage Remix",
-    remixer: "BeatWave",
-    originalArtist: "Megan Thee Stallion",
-    youtubeId: "4NRXx6U8ABQ",
-    tags: ["Hip Hop", "Trap", "Remix"],
-  },
-];
-
+const featuredBeats = [{
+  id: "beat1",
+  title: "Utopia Vibes",
+  producer: "BeatWave",
+  image: "/lovable-uploads/a7fff71b-527c-4120-8fec-0607c49ea7c9.png",
+  audioUrl: "/path-to-audio.mp3",
+  bpm: 140,
+  key: "A Minor",
+  tags: ["Hip Hop", "Travis Scott Type", "Dark"]
+}, {
+  id: "beat2",
+  title: "Midnight Dreams",
+  producer: "BeatWave",
+  image: "https://images.unsplash.com/photo-1511497584788-876760111969?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1642&q=80",
+  audioUrl: "/path-to-audio.mp3",
+  bpm: 95,
+  key: "F Major",
+  tags: ["Chill", "Drake Type", "R&B"]
+}, {
+  id: "beat3",
+  title: "Future Bounce",
+  producer: "BeatWave",
+  image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2574&q=80",
+  audioUrl: "/path-to-audio.mp3",
+  bpm: 128,
+  key: "G Minor",
+  tags: ["Techno", "EDM", "Club"]
+}];
+const featuredRemixes = [{
+  id: "remix1",
+  title: "Blinding Lights Remix",
+  remixer: "BeatWave",
+  originalArtist: "The Weeknd",
+  youtubeId: "4NRXx6U8ABQ",
+  tags: ["EDM", "Remix", "Pop"]
+}, {
+  id: "remix2",
+  title: "Savage Remix",
+  remixer: "BeatWave",
+  originalArtist: "Megan Thee Stallion",
+  youtubeId: "4NRXx6U8ABQ",
+  tags: ["Hip Hop", "Trap", "Remix"]
+}];
 const Index = () => {
   // List of genres with their corresponding icons and colors
-  const genres = [
-    { name: "Hip Hop", icon: <Music size={24} />, color: "bg-beatwave-500" },
-    { name: "Chill", icon: <Music size={24} />, color: "bg-blue-500" },
-    { name: "Techno", icon: <Music size={24} />, color: "bg-purple-500" },
-    { name: "Soul", icon: <Music size={24} />, color: "bg-amber-500" },
-    { name: "Funk", icon: <Music size={24} />, color: "bg-green-500" },
-    { name: "Jazz", icon: <Music size={24} />, color: "bg-pink-500" },
-  ];
-
-  return (
-    <div className="min-h-screen">
+  const genres = [{
+    name: "Hip Hop",
+    icon: <Music size={24} />,
+    color: "bg-beatwave-500"
+  }, {
+    name: "Chill",
+    icon: <Music size={24} />,
+    color: "bg-blue-500"
+  }, {
+    name: "Techno",
+    icon: <Music size={24} />,
+    color: "bg-purple-500"
+  }, {
+    name: "Soul",
+    icon: <Music size={24} />,
+    color: "bg-amber-500"
+  }, {
+    name: "Funk",
+    icon: <Music size={24} />,
+    color: "bg-green-500"
+  }, {
+    name: "Jazz",
+    icon: <Music size={24} />,
+    color: "bg-pink-500"
+  }];
+  return <div className="min-h-screen">
       <Header />
       
       {/* Hero Section */}
@@ -108,29 +113,7 @@ const Index = () => {
       </section>
       
       {/* Genre Filters */}
-      <section className="py-12 px-4 bg-secondary/30">
-        <div className="container mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">Browse by Genre</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {genres.map((genre) => (
-              <Link
-                key={genre.name}
-                to={`/beats?genre=${genre.name.toLowerCase()}`}
-                className="group"
-              >
-                <div className="bg-card border border-border rounded-lg p-4 text-center transition-all hover:border-beatwave-500 hover:shadow-md">
-                  <div className={`${genre.color} mx-auto mb-3 w-12 h-12 rounded-full flex items-center justify-center text-white group-hover:animate-pulse-slow`}>
-                    {genre.icon}
-                  </div>
-                  <h3 className="font-medium group-hover:text-beatwave-500 transition-colors">
-                    {genre.name}
-                  </h3>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+      
       
       {/* Featured Beats Section */}
       <section className="py-12 px-4">
@@ -146,9 +129,7 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredBeats.map((beat) => (
-              <BeatCard key={beat.id} {...beat} />
-            ))}
+            {featuredBeats.map(beat => <BeatCard key={beat.id} {...beat} />)}
           </div>
 
           <AdBanner type="content" className="my-12" />
@@ -169,9 +150,7 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {featuredRemixes.map((remix) => (
-              <RemixCard key={remix.id} {...remix} />
-            ))}
+            {featuredRemixes.map(remix => <RemixCard key={remix.id} {...remix} />)}
           </div>
         </div>
       </section>
@@ -182,11 +161,7 @@ const Index = () => {
           <div className="bg-card border border-border rounded-lg overflow-hidden">
             <div className="md:flex items-center">
               <div className="md:w-1/2">
-                <img 
-                  src="/lovable-uploads/a7fff71b-527c-4120-8fec-0607c49ea7c9.png" 
-                  alt="Cover Art Collection" 
-                  className="w-full h-full object-cover aspect-square md:aspect-auto"
-                />
+                <img src="/lovable-uploads/a7fff71b-527c-4120-8fec-0607c49ea7c9.png" alt="Cover Art Collection" className="w-full h-full object-cover aspect-square md:aspect-auto" />
               </div>
               <div className="p-6 md:p-12 md:w-1/2">
                 <h2 className="text-2xl md:text-3xl font-bold mb-4">
@@ -209,8 +184,6 @@ const Index = () => {
       </section>
       
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
