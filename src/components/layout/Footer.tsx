@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -12,8 +11,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           <div className="md:col-span-4">
             <div className="flex items-center gap-2 mb-4">
-              <Music className="h-7 w-7 text-beatwave-500" />
-              <span className="text-xl font-bold">BeatWave</span>
+              <img 
+                src="/lovable-uploads/6f3af6e6-2893-440a-9d49-fee740ae1d20.png" 
+                alt="What If Music Logo" 
+                className="h-8 w-auto"
+              />
+              <span className="text-xl font-bold">What If Music?</span>
             </div>
             <p className="text-muted-foreground mb-4">
               Free beats, remixes, and cover art for content creators. All downloads
@@ -150,7 +153,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-border mt-8 pt-6 text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} BeatWave. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} What If Music?. All rights reserved.</p>
         </div>
       </div>
     </footer>

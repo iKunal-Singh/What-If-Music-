@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, Music, Youtube, Search } from "lucide-react";
+import { Menu, X, Youtube, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import CookieConsent from "../common/CookieConsent";
@@ -42,8 +41,12 @@ const Header = () => {
       >
         <div className="container flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <Music className="h-8 w-8 text-beatwave-500" />
-            <span className="text-2xl font-bold tracking-tight">BeatWave</span>
+            <img 
+              src="/lovable-uploads/6f3af6e6-2893-440a-9d49-fee740ae1d20.png" 
+              alt="What If Music Logo" 
+              className="h-10 w-auto transition-transform duration-300 hover:scale-105"
+            />
+            <span className="text-2xl font-bold tracking-tight">What If Music?</span>
           </Link>
 
           {/* Desktop Navigation */}
