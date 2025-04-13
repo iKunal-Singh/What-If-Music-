@@ -18,7 +18,7 @@ const AdBanner = ({ type = 'content', className = '' }: AdBannerProps) => {
   
   return (
     <div className={`my-4 mx-auto ${width} ${className}`}>
-      <div className="bg-secondary/10 border border-border rounded-md p-2 text-center overflow-hidden hover:border-fuchsia-500/50 transition-all duration-300">
+      <div className="bg-secondary/10 border border-border rounded-md p-2 text-center overflow-hidden">
         <p className="text-xs text-muted-foreground mb-1">Advertisement</p>
         <div className={`${height} flex items-center justify-center`}>
           <p className="text-sm text-muted-foreground">Ad Banner Placeholder</p>

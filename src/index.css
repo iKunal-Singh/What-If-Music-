@@ -55,7 +55,7 @@
     --popover: 240 10% 4%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 300 100% 50%;
+    --primary: 8 81% 54%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 240 5% 11%;
@@ -64,7 +64,7 @@
     --muted: 240 5% 12%;
     --muted-foreground: 240 5% 65%;
 
-    --accent: 300 100% 50%;
+    --accent: 8 81% 54%;
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
@@ -72,16 +72,16 @@
 
     --border: 240 5% 15%;
     --input: 240 5% 15%;
-    --ring: 300 100% 50%;
+    --ring: 8 81% 54%;
 
     --sidebar-background: 240 10% 4%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 300 100% 50%;
+    --sidebar-primary: 8 81% 54%;
     --sidebar-primary-foreground: 210 40% 98%;
     --sidebar-accent: 240 5% 15%;
     --sidebar-accent-foreground: 210 40% 98%;
     --sidebar-border: 240 5% 10%;
-    --sidebar-ring: 300 100% 50%;
+    --sidebar-ring: 8 81% 54%;
   }
 }
 
@@ -91,7 +91,7 @@
   }
 
   body {
-    @apply bg-background text-foreground dark font-sans;
+    @apply bg-background text-foreground dark;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
@@ -118,7 +118,7 @@
 
 @layer components {
   .audio-bar {
-    @apply h-full w-1 bg-fuchsia-500 mx-[1px] rounded-full;
+    @apply h-full w-1 bg-beatwave-500 mx-[1px] rounded-full;
   }
 
   .wave-animations .audio-bar:nth-child(1) { animation-delay: 0.0s; }
@@ -128,9 +128,9 @@
   .wave-animations .audio-bar:nth-child(5) { animation-delay: 0.05s; }
 
   .glowing-border {
-    @apply border-fuchsia-500 transition-all duration-300;
-    box-shadow: 0 0 5px theme('colors.fuchsia.500'), 
-                0 0 10px theme('colors.fuchsia.500');
+    @apply border-beatwave-500 transition-all duration-300;
+    box-shadow: 0 0 5px theme('colors.beatwave.500'), 
+                0 0 10px theme('colors.beatwave.500');
   }
 
   .music-card {
@@ -138,32 +138,17 @@
   }
   
   .music-card:hover {
-    @apply border-fuchsia-500;
-    box-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
+    @apply border-beatwave-500;
+    box-shadow: 0 0 10px rgba(227, 66, 52, 0.3);
   }
 
   .beat-tag {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground hover:bg-fuchsia-500 hover:text-white cursor-pointer transition-all;
-  }
-
-  .fancy-heading {
-    @apply font-heading bg-gradient-to-r from-fuchsia-500 to-purple-400 bg-clip-text text-transparent;
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground hover:bg-beatwave-500 hover:text-white cursor-pointer transition-all;
   }
 }
 
 @layer utilities {
   .glass {
     @apply bg-secondary/30 backdrop-blur-lg border border-white/10 rounded-xl;
-  }
-  
-  .text-glow {
-    text-shadow: 0 0 5px rgba(255, 0, 255, 0.5), 
-                0 0 10px rgba(255, 0, 255, 0.3);
-  }
-  
-  .neon-border {
-    @apply border-fuchsia-500;
-    box-shadow: 0 0 5px theme('colors.fuchsia.500'), 
-                0 0 10px theme('colors.fuchsia.500');
   }
 }
