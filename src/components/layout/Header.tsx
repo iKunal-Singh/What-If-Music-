@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import CookieConsent from "../common/CookieConsent";
 import DonateModal from "../common/DonateModal";
-import ThemeSwitcher from "../theme/ThemeSwitcher";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -56,12 +55,10 @@ const Header = () => {
           </nav>
 
           <div className="hidden md:flex items-center gap-4">
-            <ThemeSwitcher />
-            
             <Button 
               variant="outline" 
               onClick={() => setDonateModalOpen(true)}
-              className="bg-gradient-to-r from-transparent to-transparent hover:from-beatwave-400/20 hover:to-beatwave-600/20 border-beatwave-500 text-beatwave-500 transition-all hover:shadow-md hover:scale-105 theme-accent-button"
+              className="bg-gradient-to-r from-transparent to-transparent hover:from-beatwave-400/20 hover:to-beatwave-600/20 border-beatwave-500 text-beatwave-500 transition-all hover:shadow-md hover:scale-105"
               aria-label="Support Us with a donation"
             >
               <Heart className="mr-2 h-4 w-4" aria-hidden="true" />
@@ -69,7 +66,10 @@ const Header = () => {
             </Button>
             
             <Button
-              onClick={() => window.open("https://youtube.com/channel/your-channel", "_blank", "noopener,noreferrer")}
+              as="a"
+              href="https://youtube.com/channel/your-channel"
+              target="_blank"
+              rel="noopener noreferrer"
               aria-label="Subscribe to our YouTube channel"
             >
               <Youtube className="mr-2 h-4 w-4" aria-hidden="true" />
@@ -97,23 +97,23 @@ const Header = () => {
               {navLinks.map(link => <Link key={link.name} to={link.path} className="text-xl font-medium border-b border-border pb-2 hover:text-beatwave-500 transition-colors" onClick={() => setIsOpen(false)}>
                   {link.name}
                 </Link>)}
-              
-              <ThemeSwitcher />
-              
               <Button
                 variant="outline"
                 onClick={() => {
                   setDonateModalOpen(true);
                   setIsOpen(false);
                 }}
-                className="border-beatwave-500 text-beatwave-500 hover:bg-beatwave-500/10 theme-accent-button"
+                className="border-beatwave-500 text-beatwave-500 hover:bg-beatwave-500/10"
                 aria-label="Support Us with a donation"
               >
                 <Heart className="mr-2 h-4 w-4" aria-hidden="true" />
                 Support Us
               </Button>
               <Button 
-                onClick={() => window.open("https://youtube.com/channel/your-channel", "_blank", "noopener,noreferrer")}
+                as="a"
+                href="https://youtube.com/channel/your-channel"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="mt-4"
                 aria-label="Subscribe to our YouTube channel"
               >

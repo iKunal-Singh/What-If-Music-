@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Music, Disc3, Image, ArrowRight } from "lucide-react";
@@ -109,13 +108,14 @@ const Index = () => {
       
       {/* Hero Section */}
       <section 
-        className="py-12 md:py-24 px-4 relative hero-section" 
+        className="py-12 md:py-24 px-4 relative" 
         style={{
           backgroundImage: "url('/lovable-uploads/8e577b0f-aefc-4105-8149-88d723a4d42e.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
+        <div className="absolute inset-0 bg-black/50"></div>
         <div className="container mx-auto relative z-10">
           <AdBanner type="header" className="mb-8" />
           
