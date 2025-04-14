@@ -85,7 +85,8 @@ const ButtonEffects = () => {
   }, []);
 
   return (
-    <style jsx global>{`
+    <style>
+      {`
       button {
         position: relative;
         overflow: hidden;
@@ -161,7 +162,8 @@ const ButtonEffects = () => {
         transform: translateY(-10px);
         transition: opacity 300ms, transform 300ms;
       }
-    `}</style>
+      `}
+    </style>
   );
 };
 

@@ -54,7 +54,8 @@ const UIEffects = () => {
   }, []);
 
   return (
-    <style jsx global>{`
+    <style>
+      {`
       /* Animated gradient background */
       body::before {
         content: '';
@@ -119,7 +120,8 @@ const UIEffects = () => {
         0% { opacity: 0.4; }
         100% { opacity: 0; transform: translate(-50%, -50%) translateY(15px); }
       }
-    `}</style>
+      `}
+    </style>
   );
 };
 

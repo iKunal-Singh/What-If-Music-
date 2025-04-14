@@ -48,15 +48,15 @@ const CustomCursor = () => {
       
       // Check if hovering over a button
       const isOverButton = target.tagName === "BUTTON" || 
-                         target.closest("button") ||
+                         Boolean(target.closest("button")) ||
                          target.classList.contains("btn") || 
-                         target.closest(".btn");
+                         Boolean(target.closest(".btn"));
                          
       // Check if hovering over a link
       const isOverLink = target.tagName === "A" || 
-                       target.closest("a") ||
+                       Boolean(target.closest("a")) ||
                        target.classList.contains("link") || 
-                       target.closest(".link");
+                       Boolean(target.closest(".link"));
       
       setIsPointer(isOverButton);
       setIsLink(isOverLink && !isOverButton);
@@ -69,14 +69,16 @@ const CustomCursor = () => {
   return (
     <>
       {/* Hide default cursor */}
-      <style jsx global>{`
+      <style>
+        {`
         body {
           cursor: none;
         }
         a, button, .btn, [role="button"] {
           cursor: none;
         }
-      `}</style>
+        `}
+      </style>
       
       {/* Main cursor */}
       <div 
