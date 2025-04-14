@@ -10,6 +10,9 @@ import Remixes from "./pages/Remixes";
 import CoverArt from "./pages/CoverArt";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
+import CustomCursor from "./components/effects/CustomCursor";
+import UIEffects from "./components/effects/UIEffects";
+import ButtonEffects from "./components/effects/ButtonEffects";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +22,9 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <CustomCursor />
+        <UIEffects />
+        <ButtonEffects />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/beats" element={<Beats />} />
