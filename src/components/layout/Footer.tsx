@@ -1,10 +1,14 @@
-import React from "react";
+
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Music, Youtube, Instagram, Twitter } from "lucide-react";
+import { Music, Youtube, Instagram, Twitter, Heart } from "lucide-react";
+import DonateModal from "../common/DonateModal";
 
 const Footer = () => {
+  const [donateModalOpen, setDonateModalOpen] = useState(false);
+  
   return (
     <footer className="bg-card border-t border-border mt-12 pt-12 pb-6">
       <div className="container">
@@ -85,6 +89,14 @@ const Footer = () => {
                   About
                 </Link>
               </li>
+              <li>
+                <button
+                  onClick={() => setDonateModalOpen(true)}
+                  className="text-muted-foreground hover:text-beatwave-500 transition-colors"
+                >
+                  Support Us
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -141,6 +153,17 @@ const Footer = () => {
                 Subscribe
               </Button>
             </div>
+            
+            <div className="mt-6">
+              <Button 
+                variant="outline" 
+                onClick={() => setDonateModalOpen(true)}
+                className="w-full border-beatwave-500 text-beatwave-500 hover:bg-beatwave-500/10"
+              >
+                <Heart className="mr-2 h-4 w-4" />
+                Support Our Music
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -156,6 +179,7 @@ const Footer = () => {
           <p>&copy; {new Date().getFullYear()} What If Music?. All rights reserved.</p>
         </div>
       </div>
+      <DonateModal open={donateModalOpen} setOpen={setDonateModalOpen} />
     </footer>
   );
 };
