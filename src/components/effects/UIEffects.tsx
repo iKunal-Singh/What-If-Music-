@@ -3,42 +3,46 @@ import React, { useEffect } from "react";
 
 const UIEffects = () => {
   useEffect(() => {
-    // Parallax scroll effect
+    // Simplified parallax effect with fewer elements and optimized calculations
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const parallaxElements = document.querySelectorAll('.parallax-element');
+      // Throttle the scroll event for better performance
+      if (!window.requestAnimationFrame) return;
       
-      parallaxElements.forEach((element) => {
-        const speed = parseFloat((element as HTMLElement).dataset.speed || '0.1');
-        (element as HTMLElement).style.transform = `translateY(${scrollY * speed}px)`;
+      window.requestAnimationFrame(() => {
+        const scrollY = window.scrollY;
+        const parallaxElements = document.querySelectorAll('.parallax-element');
+        
+        parallaxElements.forEach((element) => {
+          const speed = parseFloat((element as HTMLElement).dataset.speed || '0.1');
+          (element as HTMLElement).style.transform = `translateY(${scrollY * speed}px)`;
+        });
       });
     };
 
-    window.addEventListener('scroll', handleScroll);
+    // Add more efficient event listener
+    window.addEventListener('scroll', handleScroll, { passive: true });
     
-    // Add floating music notes to the DOM
+    // Reduced number of floating elements for better performance
     const addFloatingNotes = () => {
       const container = document.createElement('div');
       container.className = 'fixed inset-0 pointer-events-none overflow-hidden z-0';
       document.body.appendChild(container);
       
-      // Create 10 floating music notes
-      for (let i = 0; i < 10; i++) {
+      // Create only 5 floating music notes instead of 10
+      for (let i = 0; i < 5; i++) {
         const note = document.createElement('div');
-        const size = Math.floor(Math.random() * 30) + 20;
+        const size = Math.floor(Math.random() * 20) + 15;
         const posX = Math.floor(Math.random() * window.innerWidth);
         const posY = Math.floor(Math.random() * window.innerHeight);
-        const speed = (Math.random() * 0.05) + 0.02;
-        const opacity = (Math.random() * 0.4) + 0.1;
-        const rotation = Math.floor(Math.random() * 360);
+        const speed = (Math.random() * 0.03) + 0.01; // Reduced speed value
+        const opacity = (Math.random() * 0.3) + 0.1;
         
-        note.className = 'parallax-element absolute text-beatwave-500/30';
+        note.className = 'parallax-element absolute text-beatwave-500/20';
         note.dataset.speed = speed.toString();
         note.style.left = `${posX}px`;
         note.style.top = `${posY}px`;
         note.style.fontSize = `${size}px`;
         note.style.opacity = opacity.toString();
-        note.style.transform = `rotate(${rotation}deg)`;
         note.innerHTML = i % 2 === 0 ? '♪' : '♫';
         
         container.appendChild(note);
@@ -47,7 +51,6 @@ const UIEffects = () => {
     
     addFloatingNotes();
 
-    // Clean up event listeners
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -56,7 +59,7 @@ const UIEffects = () => {
   return (
     <style>
       {`
-      /* Animated gradient background */
+      /* Simplified gradient background with less animation complexity */
       body::before {
         content: '';
         position: fixed;
@@ -64,10 +67,10 @@ const UIEffects = () => {
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(-45deg, #240805, #55130C, #1A1F2C, #000);
-        background-size: 400% 400%;
+        background: linear-gradient(-45deg, #240805, #1A1F2C, #000);
+        background-size: 300% 300%;
         z-index: -1;
-        animation: gradientBG 15s ease infinite;
+        animation: gradientBG 20s ease infinite; /* Increased duration for less CPU usage */
         opacity: 0.3;
       }
       
@@ -77,48 +80,23 @@ const UIEffects = () => {
         100% { background-position: 0% 50%; }
       }
       
-      /* Animated gradient text for headings */
+      /* Simplified gradient text for headings with less complex animation */
       h1, h2 {
         background-image: linear-gradient(
           90deg,
-          #E34234, #FFE29F, #E34234
+          #E34234, #FFE29F
         );
         background-size: 200% auto;
         background-clip: text;
         text-fill-color: transparent;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        animation: shine 8s linear infinite;
+        animation: shine 10s linear infinite; /* Slowed down animation */
       }
       
       @keyframes shine {
         0% { background-position: 0% center; }
         100% { background-position: 200% center; }
-      }
-      
-      /* Glitch effect for links */
-      .glitch-effect {
-        position: relative;
-        animation: glitch 1s infinite;
-      }
-      
-      @keyframes glitch {
-        0% { transform: translate(0); }
-        20% { transform: translate(-2px, 2px); }
-        40% { transform: translate(-2px, -2px); }
-        60% { transform: translate(2px, 2px); }
-        80% { transform: translate(2px, -2px); }
-        100% { transform: translate(0); }
-      }
-      
-      /* Trail animation for cursor */
-      .trail-dot {
-        animation: trail 1s linear forwards;
-      }
-      
-      @keyframes trail {
-        0% { opacity: 0.4; }
-        100% { opacity: 0; transform: translate(-50%, -50%) translateY(15px); }
       }
       `}
     </style>
