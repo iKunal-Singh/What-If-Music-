@@ -1,0 +1,106 @@
+
+/* Base theme variables will be applied to :root */
+:root {
+  --theme-background: transparent;
+  --theme-gradient: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.3));
+  --theme-accent: var(--beatwave-500);
+  --cursor-effect: none;
+  --theme-transition: all 0.5s ease;
+}
+
+/* Synthwave Theme */
+[data-theme="synthwave"] {
+  --theme-background: linear-gradient(to right, #fc5c7d, #6a82fb);
+  --theme-gradient: linear-gradient(to bottom, rgba(89, 0, 255, 0.2), rgba(252, 92, 125, 0.2));
+  --theme-accent: #fc5c7d;
+  --cursor-effect: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><circle fill='%23fc5c7d' cx='6' cy='6' r='6'/></svg>") 6 6, auto;
+}
+
+/* Vinyl Groove Theme */
+[data-theme="vinylGroove"] {
+  --theme-background: linear-gradient(to right, #654ea3, #da8a68);
+  --theme-gradient: linear-gradient(to bottom, rgba(101, 78, 163, 0.2), rgba(218, 138, 104, 0.2));
+  --theme-accent: #da8a68;
+  --cursor-effect: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'><circle fill='none' stroke='%23da8a68' stroke-width='2' cx='12' cy='12' r='10'/><circle fill='%23da8a68' cx='12' cy='12' r='2'/></svg>") 8 8, auto;
+}
+
+/* Neon Punk Theme */
+[data-theme="neonPunk"] {
+  --theme-background: linear-gradient(to right, #00f260, #0575e6);
+  --theme-gradient: linear-gradient(to bottom, rgba(5, 117, 230, 0.2), rgba(0, 242, 96, 0.2));
+  --theme-accent: #00f260;
+  --cursor-effect: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'><path fill='%2300f260' d='M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41z'/></svg>") 8 8, auto;
+}
+
+/* Apply theme styles */
+body {
+  transition: var(--theme-transition);
+}
+
+[data-theme="synthwave"],
+[data-theme="vinylGroove"],
+[data-theme="neonPunk"] {
+  cursor: var(--cursor-effect);
+}
+
+/* Hero section with themed background */
+.hero-section {
+  position: relative;
+}
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--theme-background);
+  opacity: 0.9;
+  z-index: -1;
+  transition: var(--theme-transition);
+}
+
+.hero-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--theme-gradient);
+  z-index: -1;
+  transition: var(--theme-transition);
+}
+
+/* Theme specific button accents */
+[data-theme="synthwave"] .theme-accent-button {
+  border-color: var(--theme-accent);
+  color: var(--theme-accent);
+}
+
+[data-theme="vinylGroove"] .theme-accent-button {
+  border-color: var(--theme-accent);
+  color: var(--theme-accent);
+}
+
+[data-theme="neonPunk"] .theme-accent-button {
+  border-color: var(--theme-accent);
+  color: var(--theme-accent);
+}
+
+/* Trail effect animations for cursor (simplified version) */
+[data-theme="synthwave"] a:hover::after,
+[data-theme="neonPunk"] a:hover::after,
+[data-theme="vinylGroove"] a:hover::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--theme-accent);
+  opacity: 0.7;
+  filter: blur(5px);
+  pointer-events: none;
+  z-index: 9999;
+  animation: fadeOut 0.8s forwards;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 0.7; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.5); }
+}
