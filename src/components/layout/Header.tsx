@@ -65,16 +65,17 @@ const Header = () => {
               Support Us
             </Button>
             
-            <Button
-              as="a"
-              href="https://youtube.com/channel/your-channel"
-              target="_blank"
+            <a 
+              href="https://youtube.com/channel/your-channel" 
+              target="_blank" 
               rel="noopener noreferrer"
               aria-label="Subscribe to our YouTube channel"
             >
-              <Youtube className="mr-2 h-4 w-4" aria-hidden="true" />
-              Subscribe
-            </Button>
+              <Button>
+                <Youtube className="mr-2 h-4 w-4" aria-hidden="true" />
+                Subscribe
+              </Button>
+            </a>
           </div>
 
           {/* Mobile Navigation Toggle */}
@@ -109,17 +110,18 @@ const Header = () => {
                 <Heart className="mr-2 h-4 w-4" aria-hidden="true" />
                 Support Us
               </Button>
-              <Button 
-                as="a"
-                href="https://youtube.com/channel/your-channel"
-                target="_blank"
+              <a 
+                href="https://youtube.com/channel/your-channel" 
+                target="_blank" 
                 rel="noopener noreferrer"
                 className="mt-4"
                 aria-label="Subscribe to our YouTube channel"
               >
-                <Youtube className="mr-2 h-4 w-4" aria-hidden="true" />
-                Subscribe
-              </Button>
+                <Button>
+                  <Youtube className="mr-2 h-4 w-4" aria-hidden="true" />
+                  Subscribe
+                </Button>
+              </a>
             </nav>
           </div>}
       </header>
