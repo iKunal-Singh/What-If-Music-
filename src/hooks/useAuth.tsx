@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
-import { toast } from '@/components/ui/sonner';
+import { toast } from 'sonner'; // Use the sonner library directly instead of a local component
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
