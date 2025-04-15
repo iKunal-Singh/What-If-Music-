@@ -12,9 +12,27 @@ if (!supabaseUrl || !supabaseAnonKey) {
   );
 }
 
-// Create Supabase client with fallback empty strings to prevent runtime errors
-// This will still show console errors but won't crash the app
-export const supabase = createClient(
-  supabaseUrl || '',
-  supabaseAnonKey || ''
-);
+// Create a mock client if no credentials are provided
+// This allows the app to load, but Supabase operations will not work
+let supabase;
+
+try {
+  supabase = createClient(
+    supabaseUrl || 'https://placeholder-url.supabase.co',
+    supabaseAnonKey || 'placeholder-key'
+  );
+} catch (error) {
+  console.error('Failed to initialize Supabase client:', error);
+  // Create a mock client with empty methods
+  supabase = {
+    auth: {
+      getSession: () => Promise.resolve({ data: { session: null } }),
+      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+      signInWithPassword: () => Promise.reject(new Error('Supabase not configured')),
+      signUp: () => Promise.reject(new Error('Supabase not configured')),
+      signOut: () => Promise.reject(new Error('Supabase not configured'))
+    }
+  };
+}
+
+export { supabase };
