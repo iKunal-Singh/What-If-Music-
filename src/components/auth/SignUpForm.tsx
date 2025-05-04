@@ -31,7 +31,7 @@ export default function SignUpForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-apple-md">
         <FormField
           control={form.control}
           name="email"
@@ -95,9 +95,11 @@ export default function SignUpForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
-          Create Account
-        </Button>
+        <div className="pt-apple-sm">
+          <Button type="submit" className="w-full">
+            Create Account
+          </Button>
+        </div>
       </form>
     </Form>
   );

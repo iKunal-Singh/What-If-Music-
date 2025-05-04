@@ -19,6 +19,21 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				sans: [
+					'-apple-system', 
+					'BlinkMacSystemFont', 
+					'"SF Pro Display"', 
+					'system-ui', 
+					'sans-serif'
+				],
+			},
+			spacing: {
+				'apple-sm': '8px',
+				'apple-md': '16px',
+				'apple-lg': '24px',
+				'apple-xl': '32px',
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -76,12 +91,32 @@ export default {
 					800: '#55130C',
 					900: '#240805',
 					950: '#100302'
+				},
+				apple: {
+					blue: '#007AFF',
+					indigo: '#5856D6',
+					purple: '#AF52DE',
+					pink: '#FF2D55',
+					red: '#FF3B30',
+					orange: '#FF9500',
+					yellow: '#FFCC00',
+					green: '#34C759',
+					teal: '#5AC8FA',
+					gray: {
+						1: '#8E8E93',
+						2: '#AEAEB2',
+						3: '#C7C7CC',
+						4: '#D1D1D6',
+						5: '#E5E5EA',
+						6: '#F2F2F7',
+					},
 				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
+				sm: 'calc(var(--radius) - 4px)',
+				'apple': '10px',
 			},
 			keyframes: {
 				'accordion-down': {

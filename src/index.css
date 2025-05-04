@@ -4,83 +4,72 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
+    /* Apple Light Mode */
+    --background: 0 0% 100%; /* Pure white */
+    --foreground: 240 10% 3.9%; /* Nearly black */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
+    --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 211 100% 50%; /* Apple blue (#007AFF) */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 6% 10%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
+    --accent: 211 100% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 211 100% 50%;
+    
+    /* Radius per Apple guidelines */
+    --radius: 10px;
+    
+    /* Sidebar variables */
     --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-foreground: 240 5% 26%;
+    --sidebar-primary: 240 6% 10%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-accent: 240 5% 96%;
+    --sidebar-accent-foreground: 240 6% 10%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 217 91% 60%;
   }
 
   .dark {
-    --background: 240 10% 4%;
-    --foreground: 210 40% 98%;
-
+    /* Apple Dark Mode */
+    --background: 240 10% 4%; /* Apple dark gray */
+    --foreground: 0 0% 98%; /* Near white */
     --card: 240 10% 6%;
-    --card-foreground: 210 40% 98%;
-
+    --card-foreground: 0 0% 98%;
     --popover: 240 10% 4%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 8 81% 54%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 240 5% 11%;
-    --secondary-foreground: 210 40% 96%;
-
-    --muted: 240 5% 12%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 211 100% 50%; /* Apple blue is consistent across modes */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4% 16%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 4% 16%;
     --muted-foreground: 240 5% 65%;
-
-    --accent: 8 81% 54%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 240 5% 15%;
-    --input: 240 5% 15%;
-    --ring: 8 81% 54%;
-
+    --accent: 211 100% 50%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5% 26%;
+    --input: 240 5% 26%;
+    --ring: 211 100% 50%;
+    
+    /* Sidebar Dark Mode variables */
     --sidebar-background: 240 10% 4%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 8 81% 54%;
-    --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 240 5% 15%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 240 5% 10%;
-    --sidebar-ring: 8 81% 54%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 211 100% 50%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 5% 26%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 240 5% 26%;
+    --sidebar-ring: 211 100% 50%;
   }
 }
 
@@ -89,13 +78,18 @@
     @apply border-border;
   }
 
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
-    @apply bg-background text-foreground dark;
+    @apply bg-background text-foreground dark font-sans;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-bold;
+    @apply font-medium tracking-tight;
   }
 
   h1 {
@@ -116,8 +110,9 @@
 }
 
 @layer components {
+  /* Audio player components */
   .audio-bar {
-    @apply h-full w-1 bg-beatwave-500 mx-[1px] rounded-full;
+    @apply h-full w-1 bg-apple-blue mx-[1px] rounded-full;
   }
 
   .wave-animations .audio-bar:nth-child(1) { animation-delay: 0.0s; }
@@ -126,34 +121,59 @@
   .wave-animations .audio-bar:nth-child(4) { animation-delay: 0.15s; }
   .wave-animations .audio-bar:nth-child(5) { animation-delay: 0.05s; }
 
-  .glowing-border {
-    @apply border-beatwave-500 transition-all duration-300;
-    box-shadow: 0 0 5px theme('colors.beatwave.500'), 
-                0 0 10px theme('colors.beatwave.500');
+  /* Apple-style components */
+  .apple-card {
+    @apply bg-card rounded-apple p-apple-lg border border-border/30 shadow-sm transition-all duration-300;
+  }
+  
+  .apple-btn {
+    @apply rounded-full px-apple-md py-3 font-medium text-center transition-all duration-300;
   }
 
+  .apple-input {
+    @apply rounded-lg border border-input bg-transparent px-3 py-apple-sm text-sm text-foreground ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-apple-blue focus-visible:ring-offset-1;
+  }
+  
   .music-card {
-    @apply bg-card rounded-lg p-4 hover:scale-[1.02] transition-all duration-300 border border-border;
+    @apply bg-card rounded-apple p-apple-md transition-all duration-300 border border-border/30 shadow-sm;
   }
   
   .music-card:hover {
-    @apply border-beatwave-500;
-    box-shadow: 0 0 10px rgba(227, 66, 52, 0.3);
+    @apply shadow-md;
   }
 
   .beat-tag {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground hover:bg-beatwave-500 hover:text-white cursor-pointer transition-all;
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground hover:bg-apple-blue hover:text-white cursor-pointer transition-all;
+  }
+
+  /* Apple-style glass effect */
+  .apple-glass {
+    @apply bg-white/80 dark:bg-black/80 backdrop-blur-xl border border-white/20 dark:border-white/10;
   }
 }
 
 @layer utilities {
+  /* Apple UI effect utilities */
+  .apple-shadow-sm {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  .apple-shadow {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+  
+  .apple-shadow-lg {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  }
+
+  /* Existing utilities */
   .glass {
     @apply bg-secondary/30 backdrop-blur-lg border border-white/10 rounded-xl;
   }
   
   /* Modern UI effect classes */
   .animated-gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-beatwave-400 via-purple-500 to-beatwave-600 animate-text-gradient;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-apple-blue via-apple-purple to-apple-pink animate-text-gradient;
   }
   
   .hover-glow {
@@ -161,21 +181,57 @@
   }
   
   .hover-glow:hover {
-    filter: drop-shadow(0 0 5px theme('colors.beatwave.500'));
+    filter: drop-shadow(0 0 5px theme('colors.apple.blue'));
   }
   
-  .animate-text-gradient {
-    background-size: 200% auto;
-    animation: textGradient 5s linear infinite;
-  }
+  /* Confetti animation keyframes - keep existing */
   
-  @keyframes textGradient {
-    0% { background-position: 0% center; }
-    100% { background-position: 200% center; }
+  /* Apple UI effect animations */
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+  }
+
+  .floating {
+    animation: float 5s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { 
+      box-shadow: 0 0 5px theme('colors.apple.blue');
+    }
+    50% { 
+      box-shadow: 0 0 15px theme('colors.apple.blue'),
+                0 0 30px theme('colors.apple.teal');
+    }
+  }
+
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -100% 0;
+    }
+    100% {
+      background-position: 100% 0;
+    }
+  }
+
+  .shimmer {
+    background: linear-gradient(90deg,
+      rgba(255,255,255,0) 0%,
+      rgba(255,255,255,0.2) 25%,
+      rgba(255,255,255,0.2) 50%,
+      rgba(255,255,255,0) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
   }
 }
 
-/* Confetti animation keyframes */
+/* Keep existing animation keyframes for fall-0 through fall-49 */
 @keyframes fall-0 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-20px, 100vh) rotate(360deg); } }
 @keyframes fall-1 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(20px, 100vh) rotate(-180deg); } }
 @keyframes fall-2 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-50px, 100vh) rotate(270deg); } }
@@ -226,47 +282,3 @@
 @keyframes fall-47 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(15px, 100vh) rotate(-60deg); } }
 @keyframes fall-48 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-35px, 100vh) rotate(200deg); } }
 @keyframes fall-49 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(40px, 100vh) rotate(-280deg); } }
-
-/* New UI effect animations */
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
-}
-
-.floating {
-  animation: float 5s ease-in-out infinite;
-}
-
-@keyframes pulse-glow {
-  0%, 100% { 
-    box-shadow: 0 0 5px theme('colors.beatwave.500');
-  }
-  50% { 
-    box-shadow: 0 0 15px theme('colors.beatwave.500'),
-                0 0 30px theme('colors.beatwave.400');
-  }
-}
-
-.pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -100% 0;
-  }
-  100% {
-    background-position: 100% 0;
-  }
-}
-
-.shimmer {
-  background: linear-gradient(90deg,
-    rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0.2) 25%,
-    rgba(255,255,255,0.2) 50%,
-    rgba(255,255,255,0) 100%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
