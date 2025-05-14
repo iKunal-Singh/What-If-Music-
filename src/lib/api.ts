@@ -97,9 +97,10 @@ export const recordDownload = async (
                    itemType === 'remix' ? 'remixes' : 'cover_art';
   
   try {
+    // Fix: Using an object with named parameters instead of positional parameters
     const { error: updateError } = await supabase.rpc('increment_downloads', {
-      item_id: itemId,
-      table_name: tableName
+      p_item_id: itemId,
+      p_table_name: tableName
     });
 
     if (updateError) {
