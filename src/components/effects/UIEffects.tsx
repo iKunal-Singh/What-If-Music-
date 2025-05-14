@@ -1,58 +1,28 @@
-
 import React, { useEffect } from "react";
 
 const UIEffects = () => {
   useEffect(() => {
-    // Simplified parallax effect with fewer elements and optimized calculations
-    const handleScroll = () => {
-      // Throttle the scroll event for better performance
-      if (!window.requestAnimationFrame) return;
-      
-      window.requestAnimationFrame(() => {
-        const scrollY = window.scrollY;
-        const parallaxElements = document.querySelectorAll('.parallax-element');
-        
-        parallaxElements.forEach((element) => {
-          const speed = parseFloat((element as HTMLElement).dataset.speed || '0.1');
-          (element as HTMLElement).style.transform = `translateY(${scrollY * speed}px)`;
-        });
-      });
+    // Optimization: Use passive event listeners for improved performance
+    const onMouseMove = () => {
     };
 
-    // Add more efficient event listener
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    // Reduced number of floating elements for better performance
-    const addFloatingNotes = () => {
-      const container = document.createElement('div');
-      container.className = 'fixed inset-0 pointer-events-none overflow-hidden z-0';
-      document.body.appendChild(container);
-      
-      // Create only 5 floating music notes instead of 10
-      for (let i = 0; i < 5; i++) {
-        const note = document.createElement('div');
-        const size = Math.floor(Math.random() * 20) + 15;
-        const posX = Math.floor(Math.random() * window.innerWidth);
-        const posY = Math.floor(Math.random() * window.innerHeight);
-        const speed = (Math.random() * 0.03) + 0.01; // Reduced speed value
-        const opacity = (Math.random() * 0.3) + 0.1;
-        
-        note.className = 'parallax-element absolute text-beatwave-500/20';
-        note.dataset.speed = speed.toString();
-        note.style.left = `${posX}px`;
-        note.style.top = `${posY}px`;
-        note.style.fontSize = `${size}px`;
-        note.style.opacity = opacity.toString();
-        note.innerHTML = i % 2 === 0 ? '♪' : '♫';
-        
-        container.appendChild(note);
-      }
+    const onMouseEnter = () => {};
+    const onMouseLeave = () => {};
+
+    const onMouseOver = () => {
     };
-    
-    addFloatingNotes();
+
+    // Add events with passive option for better performance
+    document.addEventListener("mousemove", onMouseMove, { passive: true });
+    document.addEventListener("mouseenter", onMouseEnter);
+    document.addEventListener("mouseleave", onMouseLeave);
+    document.addEventListener("mouseover", onMouseOver, { passive: true });
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseenter", onMouseEnter);
+      document.removeEventListener("mouseleave", onMouseLeave);
+      document.removeEventListener("mouseover", onMouseOver);
     };
   }, []);
 

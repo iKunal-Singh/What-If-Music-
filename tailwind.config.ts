@@ -19,21 +19,6 @@ export default {
 			}
 		},
 		extend: {
-			fontFamily: {
-				sans: [
-					'-apple-system', 
-					'BlinkMacSystemFont', 
-					'"SF Pro Display"', 
-					'system-ui', 
-					'sans-serif'
-				],
-			},
-			spacing: {
-				'apple-sm': '8px',
-				'apple-md': '16px',
-				'apple-lg': '24px',
-				'apple-xl': '32px',
-			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -68,16 +53,6 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
-				},
 				beatwave: {
 					DEFAULT: '#E34234',
 					50: '#FBD4D0',
@@ -92,31 +67,17 @@ export default {
 					900: '#240805',
 					950: '#100302'
 				},
-				apple: {
-					blue: '#007AFF',
-					indigo: '#5856D6',
-					purple: '#AF52DE',
-					pink: '#FF2D55',
-					red: '#FF3B30',
-					orange: '#FF9500',
-					yellow: '#FFCC00',
-					green: '#34C759',
-					teal: '#5AC8FA',
-					gray: {
-						1: '#8E8E93',
-						2: '#AEAEB2',
-						3: '#C7C7CC',
-						4: '#D1D1D6',
-						5: '#E5E5EA',
-						6: '#F2F2F7',
-					},
+				// Original purple color scheme
+				purple: {
+					DEFAULT: '#9b87f5',
+					light: '#D6BCFA',
+					dark: '#7E69AB'
 				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)',
-				'apple': '10px',
 			},
 			keyframes: {
 				'accordion-down': {
@@ -137,7 +98,7 @@ export default {
 					'100%': { transform: 'scaleY(0.5)' }
 				},
 				'fade-in': {
-					'0%': { opacity: '0', transform: 'translateY(10px)' },
+					'0%': { opacity: '0', transform: 'translateY(5px)' },
 					'100%': { opacity: '1', transform: 'translateY(0)' }
 				},
 				'hover-glow': {
@@ -149,10 +110,22 @@ export default {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
-				'wave': 'wave 1.2s ease-in-out infinite',
-				'fade-in': 'fade-in 0.3s ease-out',
-				'hover-glow': 'hover-glow 1.5s ease-in-out infinite alternate'
-			}
+				'wave': 'wave 0.8s ease-in-out infinite',
+				'fade-in': 'fade-in 0.2s ease-out',
+				'hover-glow': 'hover-glow 1s ease-in-out infinite alternate'
+			},
+			fontFamily: {
+				sans: [
+					'system-ui',
+					'-apple-system',
+					'BlinkMacSystemFont',
+					'Segoe UI',
+					'Roboto',
+					'Helvetica Neue',
+					'Arial',
+					'sans-serif'
+				],
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],

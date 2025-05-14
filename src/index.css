@@ -1,75 +1,76 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Apple Light Mode */
+    /* Original color mode */
     --background: 0 0% 100%; /* Pure white */
     --foreground: 240 10% 3.9%; /* Nearly black */
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 211 100% 50%; /* Apple blue (#007AFF) */
+    --primary: 252 74% 75%; /* Purple (#9b87f5) */
     --primary-foreground: 0 0% 100%;
     --secondary: 240 5% 96%;
     --secondary-foreground: 240 6% 10%;
     --muted: 240 5% 96%;
     --muted-foreground: 240 4% 46%;
-    --accent: 211 100% 50%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 252 74% 75%;
+    --accent-foreground: 240 10% 3.9%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 6% 90%;
     --input: 240 6% 90%;
-    --ring: 211 100% 50%;
+    --ring: 252 74% 75%;
     
-    /* Radius per Apple guidelines */
-    --radius: 10px;
+    /* Radius */
+    --radius: 0.5rem;
     
     /* Sidebar variables */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5% 26%;
-    --sidebar-primary: 240 6% 10%;
+    --sidebar-primary: 252 74% 75%;
     --sidebar-primary-foreground: 0 0% 98%;
     --sidebar-accent: 240 5% 96%;
     --sidebar-accent-foreground: 240 6% 10%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217 91% 60%;
+    --sidebar-ring: 252 74% 75%;
   }
 
   .dark {
-    /* Apple Dark Mode */
-    --background: 240 10% 4%; /* Apple dark gray */
+    /* Dark mode */
+    --background: 240 10% 4%; /* Dark gray */
     --foreground: 0 0% 98%; /* Near white */
     --card: 240 10% 6%;
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 4%;
     --popover-foreground: 0 0% 98%;
-    --primary: 211 100% 50%; /* Apple blue is consistent across modes */
+    --primary: 252 74% 75%; /* Purple (#9b87f5) */
     --primary-foreground: 0 0% 98%;
     --secondary: 240 4% 16%;
     --secondary-foreground: 0 0% 98%;
     --muted: 240 4% 16%;
     --muted-foreground: 240 5% 65%;
-    --accent: 211 100% 50%;
+    --accent: 252 74% 75%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 63% 31%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 5% 26%;
     --input: 240 5% 26%;
-    --ring: 211 100% 50%;
+    --ring: 252 74% 75%;
     
     /* Sidebar Dark Mode variables */
     --sidebar-background: 240 10% 4%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 211 100% 50%;
+    --sidebar-primary: 252 74% 75%;
     --sidebar-primary-foreground: 0 0% 98%;
     --sidebar-accent: 240 5% 26%;
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 240 5% 26%;
-    --sidebar-ring: 211 100% 50%;
+    --sidebar-ring: 252 74% 75%;
   }
 }
 
@@ -81,15 +82,23 @@
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-background text-foreground dark font-sans;
+    @apply bg-background text-foreground font-sans;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
+  /* Improved accessibility for focus states */
+  :focus {
+    @apply outline-2 outline-offset-2 outline-primary;
+  }
+
+  /* Improved heading hierarchy */
   h1, h2, h3, h4, h5, h6 {
     @apply font-medium tracking-tight;
+    line-height: 1.2;
   }
 
   h1 {
@@ -107,35 +116,40 @@
   h4 {
     @apply text-xl md:text-2xl;
   }
+
+  /* Skip to content link for accessibility */
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-background focus:px-3 focus:py-2 focus:text-foreground focus:outline-none;
+  }
 }
 
 @layer components {
   /* Audio player components */
   .audio-bar {
-    @apply h-full w-1 bg-apple-blue mx-[1px] rounded-full;
+    @apply h-full w-1 bg-primary mx-[1px] rounded-full;
   }
 
   .wave-animations .audio-bar:nth-child(1) { animation-delay: 0.0s; }
-  .wave-animations .audio-bar:nth-child(2) { animation-delay: 0.1s; }
-  .wave-animations .audio-bar:nth-child(3) { animation-delay: 0.2s; }
-  .wave-animations .audio-bar:nth-child(4) { animation-delay: 0.15s; }
-  .wave-animations .audio-bar:nth-child(5) { animation-delay: 0.05s; }
+  .wave-animations .audio-bar:nth-child(2) { animation-delay: 0.03s; }
+  .wave-animations .audio-bar:nth-child(3) { animation-delay: 0.06s; }
+  .wave-animations .audio-bar:nth-child(4) { animation-delay: 0.09s; }
+  .wave-animations .audio-bar:nth-child(5) { animation-delay: 0.12s; }
 
-  /* Apple-style components */
-  .apple-card {
-    @apply bg-card rounded-apple p-apple-lg border border-border/30 shadow-sm transition-all duration-300;
+  /* Component styles */
+  .card {
+    @apply bg-card rounded-md p-6 border border-border/30 shadow-sm transition-all duration-200;
   }
   
-  .apple-btn {
-    @apply rounded-full px-apple-md py-3 font-medium text-center transition-all duration-300;
+  .btn {
+    @apply rounded-md px-4 py-2 font-medium text-center transition-all duration-200;
   }
 
-  .apple-input {
-    @apply rounded-lg border border-input bg-transparent px-3 py-apple-sm text-sm text-foreground ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-apple-blue focus-visible:ring-offset-1;
+  .input {
+    @apply rounded-md border border-input bg-transparent px-3 py-2 text-sm text-foreground ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1;
   }
   
   .music-card {
-    @apply bg-card rounded-apple p-apple-md transition-all duration-300 border border-border/30 shadow-sm;
+    @apply bg-card rounded-md p-4 transition-all duration-200 border border-border/30 shadow-sm;
   }
   
   .music-card:hover {
@@ -143,142 +157,41 @@
   }
 
   .beat-tag {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground hover:bg-apple-blue hover:text-white cursor-pointer transition-all;
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground hover:bg-primary hover:text-white cursor-pointer transition-all duration-200;
   }
 
-  /* Apple-style glass effect */
-  .apple-glass {
-    @apply bg-white/80 dark:bg-black/80 backdrop-blur-xl border border-white/20 dark:border-white/10;
+  /* Glass effect */
+  .glass {
+    @apply bg-white/80 dark:bg-black/80 backdrop-blur-md border border-white/20 dark:border-white/10;
   }
 }
 
 @layer utilities {
-  /* Apple UI effect utilities */
-  .apple-shadow-sm {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  /* Utilities */
+  .shadow-sm {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   }
   
-  .apple-shadow {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  .shadow {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   }
   
-  .apple-shadow-lg {
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  .shadow-lg {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   }
 
-  /* Existing utilities */
-  .glass {
-    @apply bg-secondary/30 backdrop-blur-lg border border-white/10 rounded-xl;
+  /* Ensure accessible contrast ratios */
+  .text-safe-contrast {
+    @apply text-foreground dark:text-foreground; 
   }
   
-  /* Modern UI effect classes */
+  /* Optimized animation utility classes */
   .animated-gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-apple-blue via-apple-purple to-apple-pink animate-text-gradient;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-light to-purple-dark;
   }
   
-  .hover-glow {
-    @apply transition-all duration-300;
-  }
-  
-  .hover-glow:hover {
-    filter: drop-shadow(0 0 5px theme('colors.apple.blue'));
-  }
-  
-  /* Confetti animation keyframes - keep existing */
-  
-  /* Apple UI effect animations */
-  @keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
-  }
-
-  .floating {
-    animation: float 5s ease-in-out infinite;
-  }
-
-  @keyframes pulse-glow {
-    0%, 100% { 
-      box-shadow: 0 0 5px theme('colors.apple.blue');
-    }
-    50% { 
-      box-shadow: 0 0 15px theme('colors.apple.blue'),
-                0 0 30px theme('colors.apple.teal');
-    }
-  }
-
-  .pulse-glow {
-    animation: pulse-glow 2s ease-in-out infinite;
-  }
-
-  @keyframes shimmer {
-    0% {
-      background-position: -100% 0;
-    }
-    100% {
-      background-position: 100% 0;
-    }
-  }
-
-  .shimmer {
-    background: linear-gradient(90deg,
-      rgba(255,255,255,0) 0%,
-      rgba(255,255,255,0.2) 25%,
-      rgba(255,255,255,0.2) 50%,
-      rgba(255,255,255,0) 100%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
+  /* Responsive classes */
+  .responsive-container {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
   }
 }
-
-/* Keep existing animation keyframes for fall-0 through fall-49 */
-@keyframes fall-0 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-20px, 100vh) rotate(360deg); } }
-@keyframes fall-1 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(20px, 100vh) rotate(-180deg); } }
-@keyframes fall-2 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-50px, 100vh) rotate(270deg); } }
-@keyframes fall-3 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(40px, 100vh) rotate(-90deg); } }
-@keyframes fall-4 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-30px, 100vh) rotate(180deg); } }
-@keyframes fall-5 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(25px, 100vh) rotate(-270deg); } }
-@keyframes fall-6 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-15px, 100vh) rotate(90deg); } }
-@keyframes fall-7 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(35px, 100vh) rotate(-360deg); } }
-@keyframes fall-8 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-25px, 100vh) rotate(145deg); } }
-@keyframes fall-9 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(15px, 100vh) rotate(-45deg); } }
-@keyframes fall-10 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-45px, 100vh) rotate(225deg); } }
-@keyframes fall-11 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(55px, 100vh) rotate(-135deg); } }
-@keyframes fall-12 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-10px, 100vh) rotate(315deg); } }
-@keyframes fall-13 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(5px, 100vh) rotate(-225deg); } }
-@keyframes fall-14 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-35px, 100vh) rotate(120deg); } }
-@keyframes fall-15 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(45px, 100vh) rotate(-300deg); } }
-@keyframes fall-16 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-5px, 100vh) rotate(60deg); } }
-@keyframes fall-17 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(30px, 100vh) rotate(-240deg); } }
-@keyframes fall-18 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-40px, 100vh) rotate(180deg); } }
-@keyframes fall-19 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(10px, 100vh) rotate(-120deg); } }
-@keyframes fall-20 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-30px, 100vh) rotate(300deg); } }
-@keyframes fall-21 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(20px, 100vh) rotate(-30deg); } }
-@keyframes fall-22 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-15px, 100vh) rotate(210deg); } }
-@keyframes fall-23 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(25px, 100vh) rotate(-150deg); } }
-@keyframes fall-24 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-20px, 100vh) rotate(330deg); } }
-@keyframes fall-25 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(15px, 100vh) rotate(-80deg); } }
-@keyframes fall-26 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-35px, 100vh) rotate(250deg); } }
-@keyframes fall-27 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(40px, 100vh) rotate(-10deg); } }
-@keyframes fall-28 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-25px, 100vh) rotate(170deg); } }
-@keyframes fall-29 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(30px, 100vh) rotate(-260deg); } }
-@keyframes fall-30 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-10px, 100vh) rotate(70deg); } }
-@keyframes fall-31 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(5px, 100vh) rotate(-190deg); } }
-@keyframes fall-32 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-45px, 100vh) rotate(280deg); } }
-@keyframes fall-33 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(50px, 100vh) rotate(-100deg); } }
-@keyframes fall-34 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-15px, 100vh) rotate(220deg); } }
-@keyframes fall-35 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(25px, 100vh) rotate(-40deg); } }
-@keyframes fall-36 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-30px, 100vh) rotate(130deg); } }
-@keyframes fall-37 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(35px, 100vh) rotate(-310deg); } }
-@keyframes fall-38 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-5px, 100vh) rotate(50deg); } }
-@keyframes fall-39 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(10px, 100vh) rotate(-230deg); } }
-@keyframes fall-40 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-40px, 100vh) rotate(160deg); } }
-@keyframes fall-41 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(20px, 100vh) rotate(-340deg); } }
-@keyframes fall-42 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-25px, 100vh) rotate(80deg); } }
-@keyframes fall-43 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(30px, 100vh) rotate(-200deg); } }
-@keyframes fall-44 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-15px, 100vh) rotate(290deg); } }
-@keyframes fall-45 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(25px, 100vh) rotate(-110deg); } }
-@keyframes fall-46 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-20px, 100vh) rotate(240deg); } }
-@keyframes fall-47 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(15px, 100vh) rotate(-60deg); } }
-@keyframes fall-48 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(-35px, 100vh) rotate(200deg); } }
-@keyframes fall-49 { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(40px, 100vh) rotate(-280deg); } }
