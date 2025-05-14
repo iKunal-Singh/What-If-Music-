@@ -17,9 +17,8 @@ interface ArtProps {
 const ArtCard = ({ id, title, artist, image, tags }: ArtProps) => {
   const [showPreview, setShowPreview] = useState(false);
   
-  const handleDownload = () => {
-    console.log(`Downloading cover art: ${id}`);
-  };
+  // File path would be the relative path within the storage bucket
+  const filePath = `${id}/${title.toLowerCase().replace(/\s+/g, '-')}.jpg`;
   
   return (
     <>
@@ -58,7 +57,10 @@ const ArtCard = ({ id, title, artist, image, tags }: ArtProps) => {
           <DownloadGate 
             title={title}
             fileType="Cover Art"
-            onDownload={handleDownload}
+            itemId={id}
+            itemType="cover_art"
+            filePath={filePath}
+            bucket="cover_art"
           />
         </div>
       </Card>
@@ -94,7 +96,10 @@ const ArtCard = ({ id, title, artist, image, tags }: ArtProps) => {
               <DownloadGate 
                 title={title}
                 fileType="Cover Art (High Resolution)"
-                onDownload={handleDownload}
+                itemId={id}
+                itemType="cover_art"
+                filePath={filePath}
+                bucket="cover_art"
               />
             </div>
           </div>

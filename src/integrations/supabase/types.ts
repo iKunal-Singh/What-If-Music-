@@ -9,6 +9,135 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      beats: {
+        Row: {
+          audio_url: string | null
+          bpm: number | null
+          created_at: string
+          description: string | null
+          downloads: number | null
+          id: string
+          image_url: string | null
+          key: string | null
+          producer: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          audio_url?: string | null
+          bpm?: number | null
+          created_at?: string
+          description?: string | null
+          downloads?: number | null
+          id?: string
+          image_url?: string | null
+          key?: string | null
+          producer: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          audio_url?: string | null
+          bpm?: number | null
+          created_at?: string
+          description?: string | null
+          downloads?: number | null
+          id?: string
+          image_url?: string | null
+          key?: string | null
+          producer?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      cover_art: {
+        Row: {
+          artist: string
+          created_at: string
+          downloads: number | null
+          id: string
+          image_url: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          artist: string
+          created_at?: string
+          downloads?: number | null
+          id?: string
+          image_url: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          artist?: string
+          created_at?: string
+          downloads?: number | null
+          id?: string
+          image_url?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      downloads: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          ip_address: string | null
+          item_id: string
+          item_type: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          ip_address?: string | null
+          item_id: string
+          item_type: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          ip_address?: string | null
+          item_id?: string
+          item_type?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      newsletter_subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          opted_in: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          opted_in?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          opted_in?: boolean | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -30,6 +159,45 @@ export type Database = {
           id?: string
           updated_at?: string
           username?: string | null
+        }
+        Relationships: []
+      }
+      remixes: {
+        Row: {
+          created_at: string
+          description: string | null
+          downloads: number | null
+          id: string
+          original_artist: string
+          remixer: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+          youtube_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          downloads?: number | null
+          id?: string
+          original_artist: string
+          remixer: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          youtube_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          downloads?: number | null
+          id?: string
+          original_artist?: string
+          remixer?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          youtube_id?: string | null
         }
         Relationships: []
       }

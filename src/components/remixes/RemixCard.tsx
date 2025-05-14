@@ -14,9 +14,8 @@ interface RemixProps {
 }
 
 const RemixCard = ({ id, title, remixer, originalArtist, youtubeId, tags }: RemixProps) => {
-  const handleDownload = () => {
-    console.log(`Downloading remix: ${id}`);
-  };
+  // File path would be the relative path within the storage bucket
+  const filePath = `${id}/${title.toLowerCase().replace(/\s+/g, '-')}.mp3`;
 
   return (
     <Card className="overflow-hidden music-card">
@@ -57,7 +56,10 @@ const RemixCard = ({ id, title, remixer, originalArtist, youtubeId, tags }: Remi
         <DownloadGate 
           title={title}
           fileType="Remix"
-          onDownload={handleDownload}
+          itemId={id}
+          itemType="remix"
+          filePath={filePath}
+          bucket="remixes"
         />
       </div>
     </Card>
