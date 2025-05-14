@@ -97,11 +97,11 @@ export const recordDownload = async (
                    itemType === 'remix' ? 'remixes' : 'cover_art';
   
   try {
-    // Fix: Using an object with named parameters instead of positional parameters
-    const { error: updateError } = await supabase.rpc('increment_downloads', {
-      p_item_id: itemId,
-      p_table_name: tableName
-    });
+    // Direct update approach instead of using RPC
+    const { error: updateError } = await supabase
+      .from(tableName)
+      .update({ downloads: supabase.sql`downloads + 1` })
+      .eq('id', itemId);
 
     if (updateError) {
       console.error(`Error incrementing download count:`, updateError);
