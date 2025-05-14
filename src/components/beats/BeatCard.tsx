@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Heart } from 'lucide-react';
 import AudioPlayer from '../common/AudioPlayer';
 import DownloadGate from '../common/DownloadGate';
+import { toast } from '@/components/ui/use-toast';
 
 interface BeatProps {
   id: string;
@@ -73,7 +74,7 @@ const BeatCard = ({ id, title, producer, image, audio, bpm, key_signature, tags 
           fileType="Beat"
           itemId={id}
           itemType="beat"
-          filePath={audio.split('/').pop() || ''}
+          filePath={audio && audio.split('/').pop() || `${title.replace(/\s+/g, '-').toLowerCase()}.mp3`}
           bucket="beats"
         />
       </div>

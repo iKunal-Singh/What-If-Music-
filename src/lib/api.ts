@@ -96,28 +96,32 @@ export const recordDownload = async (
   const tableName = itemType === 'beat' ? 'beats' : 
                    itemType === 'remix' ? 'remixes' : 'cover_art';
   
-  const { error: updateError } = await supabase.rpc('increment_downloads', {
-    item_id: itemId,
-    table_name: tableName
-  });
-
-  if (updateError) {
-    console.error(`Error incrementing download count:`, updateError);
-  }
-
-  // Then record the download in the downloads table
-  const { error } = await supabase
-    .from('downloads')
-    .insert({
+  try {
+    const { error: updateError } = await supabase.rpc('increment_downloads', {
       item_id: itemId,
-      item_type: itemType,
-      email: email,
-      user_agent: navigator.userAgent,
-      ip_address: 'client-side' // Will be replaced with the actual IP on the server
+      table_name: tableName
     });
 
-  if (error) {
-    console.error('Error recording download:', error);
+    if (updateError) {
+      console.error(`Error incrementing download count:`, updateError);
+    }
+
+    // Then record the download in the downloads table
+    const { error } = await supabase
+      .from('downloads')
+      .insert({
+        item_id: itemId,
+        item_type: itemType,
+        email: email,
+        user_agent: navigator.userAgent,
+        ip_address: 'client-side' // Will be replaced with the actual IP on the server
+      });
+
+    if (error) {
+      console.error('Error recording download:', error);
+    }
+  } catch (err) {
+    console.error('Download recording failed:', err);
   }
 };
 

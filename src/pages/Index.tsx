@@ -14,36 +14,36 @@ const featuredBeats = [{
   title: "Utopia Vibes",
   producer: "BeatWave",
   image: "/lovable-uploads/a7fff71b-527c-4120-8fec-0607c49ea7c9.png",
-  audioUrl: "/path-to-audio.mp3",
+  audio: "/path-to-audio.mp3", // Changed from audioUrl to audio
   bpm: 140,
-  key: "A Minor",
+  key_signature: "A Minor", // Changed from key to key_signature
   tags: ["Hip Hop", "Travis Scott Type", "Dark"]
 }, {
   id: "beat2",
   title: "Midnight Dreams",
   producer: "BeatWave",
   image: "https://images.unsplash.com/photo-1511497584788-876760111969?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1642&q=80",
-  audioUrl: "/path-to-audio.mp3",
+  audio: "/path-to-audio.mp3", // Changed from audioUrl to audio
   bpm: 95,
-  key: "F Major",
+  key_signature: "F Major", // Changed from key to key_signature
   tags: ["Chill", "Drake Type", "R&B"]
 }, {
   id: "beat3",
   title: "Future Bounce",
   producer: "BeatWave",
   image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2574&q=80",
-  audioUrl: "/path-to-audio.mp3",
+  audio: "/path-to-audio.mp3", // Changed from audioUrl to audio
   bpm: 128,
-  key: "G Minor",
+  key_signature: "G Minor", // Changed from key to key_signature
   tags: ["Techno", "EDM", "Club"]
 }, {
   id: "beat4",
   title: "Mellow Sunset",
   producer: "BeatWave",
   image: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80",
-  audioUrl: "/path-to-audio.mp3",
+  audio: "/path-to-audio.mp3", // Changed from audioUrl to audio
   bpm: 90,
-  key: "C Major",
+  key_signature: "C Major", // Changed from key to key_signature
   tags: ["Lo-Fi", "Chill", "Study"]
 }];
 const featuredRemixes = [{

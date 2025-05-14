@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import BeatCard from './BeatCard';
 import { Beat, fetchBeats } from '@/lib/api';
 import { Skeleton } from '@/components/ui/skeleton';
+import { toast } from '@/hooks/use-toast';
 
 const BeatCardContainer = () => {
   const [beats, setBeats] = useState<Beat[]>([]);
@@ -18,6 +19,11 @@ const BeatCardContainer = () => {
       } catch (err) {
         console.error('Failed to load beats:', err);
         setError('Failed to load beats. Please try again later.');
+        toast({
+          title: "Error",
+          description: "Failed to load beats. Please try again later.",
+          variant: "destructive"
+        });
       } finally {
         setLoading(false);
       }
@@ -58,7 +64,7 @@ const BeatCardContainer = () => {
           title={beat.title}
           producer={beat.producer}
           image={beat.image_url}
-          audio={beat.audio_url}
+          audio={beat.audio_url} // Correctly mapped from API response
           bpm={beat.bpm || undefined}
           key_signature={beat.key || undefined}
           tags={beat.tags}
