@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,17 +11,13 @@ interface BeatProps {
   title: string;
   producer: string;
   image: string;
-  audioUrl: string;
-  bpm: number;
-  key: string;
+  audio: string;  // Changed from audioUrl to match usage
+  bpm?: number;    // Made optional with ?
+  key_signature?: string;  // Changed from key to match usage
   tags: string[];
 }
 
-const BeatCard = ({ id, title, producer, image, audioUrl, bpm, key, tags }: BeatProps) => {
-  const handleDownload = () => {
-    console.log(`Downloading beat: ${id}`);
-  };
-
+const BeatCard = ({ id, title, producer, image, audio, bpm, key_signature, tags }: BeatProps) => {
   return (
     <Card className="overflow-hidden music-card">
       <div className="aspect-video relative overflow-hidden rounded-md mb-3">
@@ -52,16 +49,20 @@ const BeatCard = ({ id, title, producer, image, audioUrl, bpm, key, tags }: Beat
       </div>
       
       <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-        <div className="flex items-center gap-1">
-          <span className="font-medium">BPM:</span> {bpm}
-        </div>
-        <div className="flex items-center gap-1">
-          <span className="font-medium">Key:</span> {key}
-        </div>
+        {bpm && (
+          <div className="flex items-center gap-1">
+            <span className="font-medium">BPM:</span> {bpm}
+          </div>
+        )}
+        {key_signature && (
+          <div className="flex items-center gap-1">
+            <span className="font-medium">Key:</span> {key_signature}
+          </div>
+        )}
       </div>
       
       <AudioPlayer 
-        audioUrl={audioUrl}
+        audioUrl={audio}
         title={title}
         artist={producer}
       />
@@ -70,7 +71,10 @@ const BeatCard = ({ id, title, producer, image, audioUrl, bpm, key, tags }: Beat
         <DownloadGate 
           title={title}
           fileType="Beat"
-          onDownload={handleDownload}
+          itemId={id}
+          itemType="beat"
+          filePath={audio.split('/').pop() || ''}
+          bucket="beats"
         />
       </div>
     </Card>

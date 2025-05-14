@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from '@/components/ui/button';
@@ -8,7 +7,7 @@ import AdBanner from './AdBanner';
 import { useToast } from '@/hooks/use-toast';
 import { getDownloadURL, recordDownload, subscribeToNewsletter } from '@/lib/api';
 
-interface DownloadGateProps {
+export interface DownloadGateProps {
   title: string;
   fileType: string;
   itemId: string;

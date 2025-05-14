@@ -1,11 +1,16 @@
 
--- Function to increment download counts
+-- Function to increment download counts for items
 CREATE OR REPLACE FUNCTION increment_downloads(item_id UUID, table_name TEXT)
-RETURNS void
-LANGUAGE plpgsql
-SECURITY DEFINER
-AS $$
+RETURNS void AS $$
 BEGIN
-  EXECUTE format('UPDATE %I SET downloads = downloads + 1 WHERE id = %L', table_name, item_id);
+    IF table_name = 'beats' THEN
+        UPDATE beats SET downloads = downloads + 1 WHERE id = item_id;
+    ELSIF table_name = 'remixes' THEN
+        UPDATE remixes SET downloads = downloads + 1 WHERE id = item_id;
+    ELSIF table_name = 'cover_art' THEN
+        UPDATE cover_art SET downloads = downloads + 1 WHERE id = item_id;
+    ELSE
+        RAISE EXCEPTION 'Invalid table name: %', table_name;
+    END IF;
 END;
-$$;
+$$ LANGUAGE plpgsql;
