@@ -1,28 +1,11 @@
+
 import React, { useEffect } from "react";
 
 const UIEffects = () => {
   useEffect(() => {
-    // Optimization: Use passive event listeners for improved performance
-    const onMouseMove = () => {
-    };
-
-    const onMouseEnter = () => {};
-    const onMouseLeave = () => {};
-
-    const onMouseOver = () => {
-    };
-
-    // Add events with passive option for better performance
-    document.addEventListener("mousemove", onMouseMove, { passive: true });
-    document.addEventListener("mouseenter", onMouseEnter);
-    document.addEventListener("mouseleave", onMouseLeave);
-    document.addEventListener("mouseover", onMouseOver, { passive: true });
-
+    // We've removed most of the event listeners to simplify and improve performance
     return () => {
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseenter", onMouseEnter);
-      document.removeEventListener("mouseleave", onMouseLeave);
-      document.removeEventListener("mouseover", onMouseOver);
+      // Cleanup
     };
   }, []);
 
@@ -37,10 +20,10 @@ const UIEffects = () => {
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(-45deg, #240805, #1A1F2C, #000);
+        background: linear-gradient(-45deg, var(--color-background), var(--color-card), var(--color-background));
         background-size: 300% 300%;
         z-index: -1;
-        animation: gradientBG 20s ease infinite; /* Increased duration for less CPU usage */
+        animation: gradientBG 20s ease infinite;
         opacity: 0.3;
       }
       
@@ -54,14 +37,15 @@ const UIEffects = () => {
       h1, h2 {
         background-image: linear-gradient(
           90deg,
-          #E34234, #FFE29F
+          var(--color-primary), 
+          var(--color-accent)
         );
         background-size: 200% auto;
         background-clip: text;
         text-fill-color: transparent;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        animation: shine 10s linear infinite; /* Slowed down animation */
+        animation: shine 10s linear infinite;
       }
       
       @keyframes shine {
