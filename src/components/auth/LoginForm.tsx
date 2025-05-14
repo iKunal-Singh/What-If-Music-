@@ -29,7 +29,7 @@ export default function LoginForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-apple-md">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="email"
@@ -78,11 +78,9 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
-        <div className="pt-apple-sm">
-          <Button type="submit" className="w-full">
-            Sign In
-          </Button>
-        </div>
+        <Button type="submit" className="w-full">
+          Sign In
+        </Button>
       </form>
     </Form>
   );
