@@ -103,10 +103,11 @@ const Index = () => {
     icon: <Music size={24} />,
     color: "bg-pink-500"
   }];
-  return <div className="min-h-screen">
+  return (
+    <div className="min-h-screen">
       <Header />
       
-      {/* Hero Section */}
+      {/* Hero Section - Improved for accessibility and performance */}
       <section 
         className="py-12 md:py-24 px-4 relative" 
         style={{
@@ -114,13 +115,15 @@ const Index = () => {
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
+        role="banner"
+        aria-label="BeatWave - Free Beats & Remixes"
       >
         <div className="absolute inset-0 bg-black/50"></div>
         <div className="container mx-auto relative z-10">
           <AdBanner type="header" className="mb-8" />
           
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-beatwave-400 to-beatwave-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-beatwave-400 to-beatwave-600 bg-clip-text text-transparent">
               Free Beats & Remixes for Content Creators
             </h1>
             <p className="text-xl text-white mb-8 max-w-2xl mx-auto">
@@ -129,14 +132,14 @@ const Index = () => {
             <div className="flex flex-wrap gap-4 justify-center">
               <Button asChild size="lg" className="gap-2">
                 <Link to="/beats">
-                  <Music size={20} />
-                  Browse Beats
+                  <Music size={20} aria-hidden="true" />
+                  <span>Browse Beats</span>
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="gap-2">
                 <Link to="/remixes">
-                  <Disc3 size={20} />
-                  Explore Remixes
+                  <Disc3 size={20} aria-hidden="true" />
+                  <span>Explore Remixes</span>
                 </Link>
               </Button>
             </div>
@@ -147,20 +150,20 @@ const Index = () => {
       {/* Genre Filters */}
       
       
-      {/* Featured Beats Section */}
+      {/* Featured Beats Section - Improved responsive layout */}
       <section className="py-12 px-4">
         <div className="container mx-auto">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold">Featured Beats</h2>
             <Button variant="ghost" asChild className="gap-1">
               <Link to="/beats">
-                View All
-                <ArrowRight size={16} />
+                <span>View All</span>
+                <ArrowRight size={16} aria-hidden="true" />
               </Link>
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {featuredBeats.map(beat => <BeatCard key={beat.id} {...beat} />)}
           </div>
 
@@ -168,34 +171,39 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Featured Remixes Section */}
+      {/* Featured Remixes Section - Improved accessibility */}
       <section className="py-12 px-4 bg-secondary/30">
         <div className="container mx-auto">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold">Latest Remixes</h2>
             <Button variant="ghost" asChild className="gap-1">
               <Link to="/remixes">
-                View All
-                <ArrowRight size={16} />
+                <span>View All</span>
+                <ArrowRight size={16} aria-hidden="true" />
               </Link>
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {featuredRemixes.map(remix => <RemixCard key={remix.id} {...remix} />)}
           </div>
         </div>
       </section>
       
-      {/* Cover Art Teaser */}
+      {/* Cover Art Teaser - Improved responsiveness */}
       <section className="py-12 px-4">
         <div className="container mx-auto">
           <div className="bg-card border border-border rounded-lg overflow-hidden">
-            <div className="md:flex items-center">
-              <div className="md:w-1/2">
-                <img src="/lovable-uploads/a7fff71b-527c-4120-8fec-0607c49ea7c9.png" alt="Cover Art Collection" className="w-full h-full object-cover aspect-square md:aspect-auto" />
+            <div className="flex flex-col md:flex-row items-center">
+              <div className="w-full md:w-1/2">
+                <img 
+                  src="/lovable-uploads/a7fff71b-527c-4120-8fec-0607c49ea7c9.png" 
+                  alt="Cover Art Collection" 
+                  className="w-full h-full object-cover aspect-square md:aspect-auto"
+                  loading="lazy" // Performance optimization
+                />
               </div>
-              <div className="p-6 md:p-12 md:w-1/2">
+              <div className="p-6 md:p-12 w-full md:w-1/2">
                 <h2 className="text-2xl md:text-3xl font-bold mb-4">
                   Professional Cover Art
                 </h2>
@@ -205,8 +213,8 @@ const Index = () => {
                 </p>
                 <Button asChild className="gap-2">
                   <Link to="/cover-art">
-                    <Image size={20} />
-                    Browse Gallery
+                    <Image size={20} aria-hidden="true" />
+                    <span>Browse Gallery</span>
                   </Link>
                 </Button>
               </div>
@@ -216,6 +224,8 @@ const Index = () => {
       </section>
       
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Index;

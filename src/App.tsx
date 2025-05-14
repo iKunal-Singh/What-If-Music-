@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -12,7 +12,6 @@ import Remixes from "./pages/Remixes";
 import CoverArt from "./pages/CoverArt";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
-import CustomCursor from "./components/effects/CustomCursor";
 import UIEffects from "./components/effects/UIEffects";
 import ButtonEffects from "./components/effects/ButtonEffects";
 
@@ -25,7 +24,6 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <CustomCursor />
           <UIEffects />
           <ButtonEffects />
           <Routes>
