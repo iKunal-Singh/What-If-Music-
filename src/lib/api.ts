@@ -97,10 +97,23 @@ export const recordDownload = async (
                    itemType === 'remix' ? 'remixes' : 'cover_art';
   
   try {
-    // Direct update approach instead of using RPC
+    // First, fetch the current downloads count
+    const { data: itemData, error: fetchError } = await supabase
+      .from(tableName)
+      .select('downloads')
+      .eq('id', itemId)
+      .single();
+
+    if (fetchError) {
+      console.error(`Error fetching current download count:`, fetchError);
+      return;
+    }
+
+    // Then update with incremented value
+    const currentDownloads = itemData?.downloads || 0;
     const { error: updateError } = await supabase
       .from(tableName)
-      .update({ downloads: supabase.sql`downloads + 1` })
+      .update({ downloads: currentDownloads + 1 })
       .eq('id', itemId);
 
     if (updateError) {
