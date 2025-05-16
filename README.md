@@ -1,73 +1,209 @@
-# Welcome to your Lovable project
+# What If Music?
 
-## Project info
+What If Music? is a web platform that provides royalty-free music and visual assets for content creators. Users can access original beats, remixes, and cover art through a responsive download system.
 
-**URL**: https://lovable.dev/projects/3fc16557-cc2a-41ab-9b58-344271c36c26
+## Table of Contents
 
-## How can I edit this code?
+* [Overview](#overview)
+* [Features](#features)
+* [Technical Architecture](#technical-architecture)
+* [Database Schema](#database-schema)
+* [Component Documentation](#component-documentation)
+* [API Documentation](#api-documentation)
+* [Administration Guide](#administration-guide)
 
-There are several ways of editing your application.
+## Overview
 
-**Use Lovable**
+What If Music? provides royalty-free:
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/3fc16557-cc2a-41ab-9b58-344271c36c26) and start prompting.
+* **Beats**: Original compositions for multimedia projects
+* **Remixes**: Non-commercial remixed versions of popular tracks (Fair Use)
+* **Cover Art**: High-quality artwork
 
-Changes made via Lovable will be committed automatically to this repo.
+## Features
 
-**Use your preferred IDE**
+### 1. Content Discovery
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+* Browse by category
+* Filter by BPM, key, tags
+* Featured content highlights
+* Fully responsive design
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 2. Audio Playback
 
-Follow these steps:
+* Inline audio player
+* YouTube embeds for remixes
+* Progress & volume control
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### 3. Download System
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+* Ad view or email subscription to unlock downloads
+* Analytics-enabled download tracking
+* Fair use disclosures
 
-# Step 3: Install the necessary dependencies.
-npm i
+### 4. User Engagement
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+* Email subscription
+* Social links
+* Donation options
+* Cookie consent manager
+
+### 5. Responsive Design
+
+* Mobile-first
+* Touch-friendly
+* Optimized for all screen sizes
+
+## Technical Architecture
+
+### Frontend
+
+* **React** with TypeScript
+* **Routing**: React Router DOM
+* **UI**: Shadcn/UI + Tailwind CSS
+* **State**: React Hooks, Context API
+
+### Backend
+
+* **Database**: Supabase (PostgreSQL)
+* **Auth**: Supabase Auth
+* **Storage**: Supabase Storage
+* **API**: Supabase client
+
+### Performance
+
+* Lazy loading
+* Code splitting
+* Responsive images
+* Asset optimization
+
+## Database Schema
+
+### Tables
+
+#### `beats`
+
+* `id` (UUID, PK)
+* `title`, `producer`, `image_url`, `audio_url`
+* `bpm`, `key`, `tags[]`, `description`
+* `downloads`, `created_at`, `updated_at`
+
+#### `remixes`
+
+* `id`, `title`, `remixer`, `original_artist`, `youtube_id`
+* `tags[]`, `description`, `downloads`
+
+#### `cover_art`
+
+* `id`, `title`, `artist`, `image_url`, `tags[]`, `downloads`
+
+#### `downloads`
+
+* `id`, `item_id`, `item_type`, `email`, `ip_address`, `user_agent`, `created_at`
+
+#### `newsletter_subscribers`
+
+* `id`, `email`, `opted_in`, `created_at`
+
+#### `profiles`
+
+* `id`, `avatar_url`, `username`, `created_at`, `updated_at`
+
+## Component Documentation
+
+### Layout
+
+#### `Header`
+
+* File: `src/components/layout/Header.tsx`
+* Features: Navigation, logo, mobile menu, donate/support link
+
+#### `Footer`
+
+* File: `src/components/layout/Footer.tsx`
+* Features: Legal/social links, newsletter signup
+
+#### `PageLayout`
+
+* Wraps all pages with header/footer
+
+### Content Cards
+
+#### `BeatCard`
+
+* Props: `id`, `title`, `producer`, `image`, `audio`, `bpm?`, `key_signature?`, `tags[]`
+
+#### `RemixCard`
+
+* Props: `id`, `title`, `remixer`, `originalArtist`, `youtubeId`, `tags[]`
+
+#### `ArtCard`
+
+* Props: `id`, `title`, `artist`, `image`, `tags[]`
+
+### Utilities
+
+#### `AudioPlayer`
+
+* Audio preview for beats
+
+#### `DownloadGate`
+
+* Modal for ad or email-based download access
+
+#### `AdBanner`
+
+* Props: `type`, `className?`
+
+#### `CookieConsent`
+
+* Handles cookie banners and preferences
+
+## API Documentation
+
+### Fetching
+
+```ts
+const beats = await fetchBeats();
+const remixes = await fetchRemixes();
+const coverArt = await fetchCoverArt();
 ```
 
-**Edit a file directly in GitHub**
+### Actions
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```ts
+await recordDownload('beat-123', 'beat', 'user@example.com');
+const success = await subscribeToNewsletter('user@example.com');
+const url = await getDownloadURL('beats', 'beat-123/track.mp3');
+```
 
-**Use GitHub Codespaces**
+## Administration Guide
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Add Beat
 
-## What technologies are used for this project?
+```ts
+supabase.from('beats').insert({ title: 'New Beat', ... });
+```
 
-This project is built with .
+### Add Remix
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```ts
+supabase.from('remixes').insert({ title: 'New Remix', ... });
+```
 
-## How can I deploy this project?
+### Add Cover Art
 
-Simply open [Lovable](https://lovable.dev/projects/3fc16557-cc2a-41ab-9b58-344271c36c26) and click on Share -> Publish.
+```ts
+supabase.from('cover_art').insert({ title: 'New Cover Art', ... });
+```
 
-## Can I connect a custom domain to my Lovable project?
+## Support
 
-Yes it is!
+* [React Docs](https://reactjs.org/docs/getting-started.html)
+* [Supabase Docs](https://supabase.com/docs)
+* [Tailwind CSS](https://tailwindcss.com/docs)
+* [Shadcn UI](https://ui.shadcn.com/docs)
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+---
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+> For deeper implementation details, see the source code and in-file comments.
