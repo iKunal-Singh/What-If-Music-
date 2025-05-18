@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from "@/context/AuthContext";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
@@ -9,18 +9,31 @@ import DashboardContent from "@/components/dashboard/DashboardContent";
 import DashboardUploads from "@/components/dashboard/DashboardUploads";
 import DashboardSettings from "@/components/dashboard/DashboardSettings";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Loader2 } from 'lucide-react';
 
 const Dashboard = () => {
-  const { user } = useAuthContext();
+  const { user, loading } = useAuthContext();
   const navigate = useNavigate();
+  const [mounted, setMounted] = useState(false);
 
-  // Protect dashboard from unauthorized access
+  // Protect dashboard from unauthorized access with better loading handling
   useEffect(() => {
-    if (!user) {
+    setMounted(true);
+    
+    if (!loading && !user) {
       navigate('/auth');
     }
-  }, [user, navigate]);
+  }, [user, navigate, loading]);
 
+  // Don't render until we've checked auth status to prevent flashing content
+  if (!mounted || loading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+  
   if (!user) {
     return null; // Don't render anything while redirecting
   }

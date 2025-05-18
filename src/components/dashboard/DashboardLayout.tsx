@@ -22,6 +22,7 @@ import {
   Home
 } from 'lucide-react';
 import { useAuthContext } from "@/context/AuthContext";
+import { toast } from 'sonner';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -32,8 +33,21 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const { signOut } = useAuthContext();
 
   const handleSignOut = async () => {
-    await signOut();
-    navigate('/');
+    try {
+      await signOut();
+      navigate('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+      toast.error('Failed to sign out. Please try again.');
+    }
+  };
+
+  const handleTabClick = (tabId: string) => {
+    // Find the tab in the main content area and trigger it
+    const tabElement = document.querySelector(`[value="${tabId}"]`) as HTMLElement;
+    if (tabElement) {
+      tabElement.click();
+    }
   };
 
   return (
@@ -46,43 +60,63 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           <SidebarContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Dashboard">
-                  <a href="#overview" className="flex items-center gap-2">
+                <SidebarMenuButton 
+                  asChild 
+                  tooltip="Dashboard"
+                  onClick={() => handleTabClick('overview')}
+                >
+                  <button className="flex w-full items-center gap-2">
                     <LayoutDashboard size={18} />
                     <span>Overview</span>
-                  </a>
+                  </button>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Users">
-                  <a href="#users" className="flex items-center gap-2">
+                <SidebarMenuButton 
+                  asChild 
+                  tooltip="Users"
+                  onClick={() => handleTabClick('users')}
+                >
+                  <button className="flex w-full items-center gap-2">
                     <Users size={18} />
                     <span>User Insights</span>
-                  </a>
+                  </button>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Content">
-                  <a href="#content" className="flex items-center gap-2">
+                <SidebarMenuButton 
+                  asChild 
+                  tooltip="Content"
+                  onClick={() => handleTabClick('content')}
+                >
+                  <button className="flex w-full items-center gap-2">
                     <FileText size={18} />
                     <span>Content Management</span>
-                  </a>
+                  </button>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Uploads">
-                  <a href="#uploads" className="flex items-center gap-2">
+                <SidebarMenuButton 
+                  asChild 
+                  tooltip="Uploads"
+                  onClick={() => handleTabClick('uploads')}
+                >
+                  <button className="flex w-full items-center gap-2">
                     <Upload size={18} />
                     <span>Upload Management</span>
-                  </a>
+                  </button>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Settings">
-                  <a href="#settings" className="flex items-center gap-2">
+                <SidebarMenuButton 
+                  asChild 
+                  tooltip="Settings"
+                  onClick={() => handleTabClick('settings')}
+                >
+                  <button className="flex w-full items-center gap-2">
                     <Settings size={18} />
                     <span>Settings</span>
-                  </a>
+                  </button>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -101,9 +135,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 <SidebarMenuButton 
                   asChild 
                   tooltip="Sign Out"
-                  onClick={handleSignOut}
                 >
-                  <button className="flex items-center gap-2 w-full text-left">
+                  <button 
+                    onClick={handleSignOut}
+                    className="flex items-center gap-2 w-full text-left"
+                  >
                     <LogOut size={18} />
                     <span>Sign Out</span>
                   </button>

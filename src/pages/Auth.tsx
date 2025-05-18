@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "@/context/AuthContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,11 +11,13 @@ export default function Auth() {
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
   const { user } = useAuthContext();
   const navigate = useNavigate();
-
-  if (user) {
-    navigate("/");
-    return null;
-  }
+  
+  // Use useEffect for navigation instead of doing it directly in the component
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   return (
     <div className="container flex items-center justify-center min-h-screen py-8">

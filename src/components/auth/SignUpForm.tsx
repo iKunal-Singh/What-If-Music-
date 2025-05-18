@@ -7,25 +7,41 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-type SignUpFormValues = {
-  email: string;
-  password: string;
-  username: string;
-};
+const formSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+type SignUpFormValues = z.infer<typeof formSchema>;
 
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { signUp } = useAuthContext();
-  const form = useForm<SignUpFormValues>();
+  
+  const form = useForm<SignUpFormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      username: "",
+      password: "",
+    },
+  });
 
   const onSubmit = async (data: SignUpFormValues) => {
     try {
+      setIsLoading(true);
       const { error } = await signUp(data.email, data.password);
       if (error) throw error;
       toast.success("Account created successfully! Please check your email to confirm your account.");
     } catch (error: any) {
       toast.error(error.message || "Failed to create account");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -95,8 +111,8 @@ export default function SignUpForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
-          Create Account
+        <Button type="submit" className="w-full" disabled={isLoading}>
+          {isLoading ? "Creating Account..." : "Create Account"}
         </Button>
       </form>
     </Form>

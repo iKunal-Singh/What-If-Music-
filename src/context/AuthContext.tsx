@@ -1,10 +1,11 @@
 
-import { createContext, useContext, ReactNode } from 'react';
-import { User } from '@supabase/supabase-js';
+import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
+import { User, Session } from '@supabase/supabase-js';
 import { useAuth } from '@/hooks/useAuth';
 
 type AuthContextType = {
   user: User | null;
+  session: Session | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<any>;
   signUp: (email: string, password: string) => Promise<any>;
@@ -26,4 +27,3 @@ export function useAuthContext() {
   }
   return context;
 }
-

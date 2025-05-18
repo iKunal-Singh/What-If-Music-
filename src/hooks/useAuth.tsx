@@ -1,72 +1,83 @@
 
 import { useEffect, useState } from 'react';
-import { User } from '@supabase/supabase-js';
+import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
-import { toast } from 'sonner'; // Use the sonner library directly instead of a local component
+import { toast } from 'sonner';
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if Supabase is properly configured
-    const checkSupabaseConfig = async () => {
-      try {
-        // Check active sessions and sets the user
-        const { data: { session } } = await supabase.auth.getSession();
+    // Set up auth state listener FIRST to ensure we don't miss events
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
         setUser(session?.user ?? null);
-      } catch (error) {
-        console.error('Supabase authentication error:', error);
-        toast.error('Authentication system is not available. Please check Supabase configuration.');
-      } finally {
         setLoading(false);
       }
-    };
-    
-    checkSupabaseConfig();
+    );
 
-    // Listen for changes on auth state (sign in, sign out, etc.)
-    try {
-      const {
-        data: { subscription },
-      } = supabase.auth.onAuthStateChange((_event, session) => {
-        setUser(session?.user ?? null);
-      });
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    }).catch((error) => {
+      console.error('Failed to get current session:', error);
+      setLoading(false);
+    });
 
-      return () => subscription.unsubscribe();
-    } catch (error) {
-      console.error('Failed to set up auth state change listener:', error);
-      return () => {}; // Return empty cleanup function
-    }
+    return () => subscription.unsubscribe();
   }, []);
 
   return {
     user,
+    session,
     loading,
     signIn: async (email: string, password: string) => {
       try {
-        return await supabase.auth.signInWithPassword({ email, password });
-      } catch (error) {
+        const response = await supabase.auth.signInWithPassword({ email, password });
+        if (response.error) {
+          toast.error(response.error.message);
+        } else if (response.data?.user) {
+          toast.success('Signed in successfully!');
+        }
+        return response;
+      } catch (error: any) {
         console.error('Sign in error:', error);
-        toast.error('Unable to sign in. Please check Supabase configuration.');
+        toast.error('Unable to sign in. Please check your credentials.');
         return { data: null, error };
       }
     },
     signUp: async (email: string, password: string) => {
       try {
-        return await supabase.auth.signUp({ email, password });
-      } catch (error) {
+        const response = await supabase.auth.signUp({ email, password });
+        if (response.error) {
+          toast.error(response.error.message);
+        } else {
+          toast.success('Account created successfully! Please check your email to confirm your account.');
+        }
+        return response;
+      } catch (error: any) {
         console.error('Sign up error:', error);
-        toast.error('Unable to sign up. Please check Supabase configuration.');
+        toast.error('Unable to sign up. Please check your credentials.');
         return { data: null, error };
       }
     },
     signOut: async () => {
       try {
-        return await supabase.auth.signOut();
-      } catch (error) {
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+          toast.error(error.message);
+        } else {
+          toast.success('Signed out successfully!');
+        }
+        return { error };
+      } catch (error: any) {
         console.error('Sign out error:', error);
-        toast.error('Unable to sign out. Please check Supabase configuration.');
+        toast.error('Unable to sign out. Please try again.');
         return { error };
       }
     },
