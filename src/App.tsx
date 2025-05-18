@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,10 +16,19 @@ import UIEffects from "./components/effects/UIEffects";
 import ButtonEffects from "./components/effects/ButtonEffects";
 import { PageLayout } from "./components/layout/PageLayout";
 
-// Create a reusable RequireAuth component
+// Create a more robust RequireAuth component
 const RequireAuth = ({ children }: { children: JSX.Element }) => {
-  const storedSession = localStorage.getItem('supabase.auth.token');
-  return storedSession ? children : <Navigate to="/auth" />;
+  // Use localStorage to check if a session exists as a first quick check
+  const storedSession = localStorage.getItem('sb-rjucdyyuowpebzbuixcu-auth-token');
+  
+  // If we don't have a session stored, redirect to auth
+  if (!storedSession) {
+    console.log("No session in localStorage, redirecting to auth");
+    return <Navigate to="/auth" replace />;
+  }
+  
+  // Otherwise render the protected content
+  return children;
 };
 
 const queryClient = new QueryClient({
@@ -38,7 +46,7 @@ const App = () => (
       <AuthProvider>
         <Toaster />
         <Sonner />
-        {/* Changed BrowserRouter to HashRouter to fix security error in iframe environment */}
+        {/* Using HashRouter to avoid security errors in iframe environment */}
         <HashRouter>
           <UIEffects />
           <ButtonEffects />

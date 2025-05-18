@@ -7,7 +7,7 @@ import LoginForm from "@/components/auth/LoginForm";
 import SignUpForm from "@/components/auth/SignUpForm";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Home } from "lucide-react";
+import { Home, Loader2 } from "lucide-react";
 
 export default function Auth() {
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
@@ -25,7 +25,7 @@ export default function Auth() {
   if (loading) {
     return (
       <div className="container flex items-center justify-center min-h-screen">
-        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div>
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }

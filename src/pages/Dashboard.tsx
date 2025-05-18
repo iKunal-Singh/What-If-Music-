@@ -18,18 +18,20 @@ const Dashboard = () => {
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
 
-  // Protect dashboard from unauthorized access with better loading handling
   useEffect(() => {
     setMounted(true);
     
-    if (!loading && !user) {
+    if (!loading && !user && !session) {
       console.log("No authenticated user found, redirecting to auth page");
       navigate('/auth', { replace: true });
     } else if (user) {
       console.log("User authenticated:", user.email);
-      toast.success(`Welcome back, ${user.email}`);
+      // Only show welcome toast once when component mounts
+      if (!mounted) {
+        toast.success(`Welcome back, ${user.email}`);
+      }
     }
-  }, [user, navigate, loading]);
+  }, [user, navigate, loading, session, mounted]);
 
   // Don't render until we've checked auth status to prevent flashing content
   if (!mounted || loading) {
@@ -40,8 +42,10 @@ const Dashboard = () => {
     );
   }
   
+  // Extra safety check - if somehow we got this far without a user, redirect
   if (!user) {
-    return null; // Don't render anything while redirecting
+    navigate('/auth', { replace: true });
+    return null;
   }
 
   return (
