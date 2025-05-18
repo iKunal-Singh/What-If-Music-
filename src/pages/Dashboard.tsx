@@ -11,22 +11,27 @@ import { Loader2 } from 'lucide-react';
 
 const Dashboard = () => {
   const { user, loading } = useAuthContext();
+  
+  console.log(`Dashboard: user=${!!user}, loading=${loading}`);
 
   // Show loading spinner while authentication state is being determined
   if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <span className="ml-2">Loading dashboard...</span>
       </div>
     );
   }
   
-  // The RequireAuth component in App.tsx will handle redirection if user is not authenticated
-  // This is just an extra safety check
+  // The RequireAuth component in App.tsx handles redirection if user is not authenticated
+  // This is just an additional safety check
   if (!user) {
-    console.log("Dashboard: No user found, but this should be handled by RequireAuth");
+    console.log("Dashboard: No user found, this should be handled by RequireAuth");
     return null;
   }
+
+  console.log("Dashboard: Rendering dashboard content for user:", user.email);
 
   return (
     <DashboardLayout>

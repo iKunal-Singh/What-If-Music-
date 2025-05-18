@@ -13,21 +13,30 @@ export default function Auth() {
   const { user, loading } = useAuthContext();
   const navigate = useNavigate();
   const location = useLocation();
+  const [redirecting, setRedirecting] = useState(false);
   
   // Get the intended destination from location state, or default to dashboard
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || "/dashboard";
   
-  // Use useEffect for navigation instead of doing it directly in the component
   useEffect(() => {
-    // Only redirect if we have a user and loading is complete
-    if (user && !loading) {
-      console.log("Auth: Redirecting authenticated user to", from);
+    console.log(`Auth page: user=${!!user}, loading=${loading}, redirecting=${redirecting}`);
+    
+    // Only redirect if we have a user, loading is complete, and we're not already redirecting
+    if (user && !loading && !redirecting) {
+      console.log("Auth: Preparing redirect to", from);
+      
+      // Set redirecting flag to prevent multiple redirects
+      setRedirecting(true);
+      
       // Use timeout to ensure state updates have processed
-      setTimeout(() => {
+      const timer = setTimeout(() => {
+        console.log("Auth: Executing redirect to", from);
         navigate(from, { replace: true });
-      }, 0);
+      }, 100);
+      
+      return () => clearTimeout(timer);
     }
-  }, [user, loading, navigate, from]);
+  }, [user, loading, navigate, from, redirecting]);
 
   if (loading) {
     return (
@@ -37,9 +46,8 @@ export default function Auth() {
     );
   }
 
-  // If we have a user and we're not loading, we'll redirect via the useEffect
-  // This prevents rendering the auth form momentarily before redirect
-  if (user) {
+  // Show loading indicator during redirect
+  if (user || redirecting) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />

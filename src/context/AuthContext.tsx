@@ -17,7 +17,9 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const auth = useAuth();
-
+  
+  console.log("AuthProvider: auth state updated", !!auth.user);
+  
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 }
 
@@ -33,23 +35,28 @@ export function useAuthContext() {
 export function RequireAuth({ children }: { children: ReactNode }) {
   const { user, loading } = useAuthContext();
   const location = useLocation();
-  const [checkingSession, setCheckingSession] = useState(true);
+  const [isReady, setIsReady] = useState(false);
   
-  // Add a small delay to ensure auth state is fully initialized
+  // Add a delay to ensure auth state is fully initialized and stable
   useEffect(() => {
+    console.log(`RequireAuth: user=${!!user}, loading=${loading}, isReady=${isReady}`);
+    
     if (!loading) {
+      // Short delay to ensure auth state is stable before making routing decisions
       const timer = setTimeout(() => {
-        setCheckingSession(false);
-      }, 200);
+        setIsReady(true);
+      }, 300);
+      
       return () => clearTimeout(timer);
     }
-  }, [loading]);
+  }, [loading, user]);
 
   // Don't render anything while we check for authentication
-  if (loading || checkingSession) {
+  if (loading || !isReady) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+        <span className="ml-2">Verifying authentication...</span>
       </div>
     );
   }
