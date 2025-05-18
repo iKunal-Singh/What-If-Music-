@@ -1,5 +1,6 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
@@ -8,48 +9,64 @@ import { Edit, Trash2, Eye, Plus } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { Remix } from '@/lib/api';
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, 
+  AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from '@/components/ui/alert-dialog';
+import RemixForm from './RemixForm';
+import { deleteRemix } from '@/lib/api/content';
 
 const ContentRemixes = () => {
-  const [remixes, setRemixes] = useState<Remix[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [selectedRemix, setSelectedRemix] = useState<Remix | null>(null);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [remixToDelete, setRemixToDelete] = useState<Remix | null>(null);
+  
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    fetchRemixes();
-  }, []);
-
-  const fetchRemixes = async () => {
-    try {
-      setLoading(true);
+  // Fetch remixes with React Query
+  const { data: remixes = [], isLoading } = useQuery({
+    queryKey: ['remixes'],
+    queryFn: async () => {
       const { data, error } = await supabase
         .from('remixes')
         .select('*')
         .order('created_at', { ascending: false });
         
       if (error) throw error;
-      setRemixes(data || []);
-    } catch (error) {
-      console.error('Error fetching remixes:', error);
-      toast.error('Failed to load remixes');
-    } finally {
-      setLoading(false);
+      return data as Remix[];
     }
-  };
+  });
 
-  const deleteRemix = async (id: string) => {
-    try {
-      const { error } = await supabase
-        .from('remixes')
-        .delete()
-        .eq('id', id);
-        
-      if (error) throw error;
-      
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteRemix(id),
+    onSuccess: () => {
       toast.success('Remix deleted successfully');
-      setRemixes(remixes.filter(remix => remix.id !== id));
-    } catch (error) {
+      queryClient.invalidateQueries({ queryKey: ['remixes'] });
+      setRemixToDelete(null);
+    },
+    onError: (error) => {
       console.error('Error deleting remix:', error);
       toast.error('Failed to delete remix');
     }
+  });
+
+  const handleDeleteClick = (remix: Remix) => {
+    setRemixToDelete(remix);
+  };
+
+  const confirmDelete = () => {
+    if (remixToDelete) {
+      deleteMutation.mutate(remixToDelete.id);
+    }
+  };
+
+  const handleEditClick = (remix: Remix) => {
+    setSelectedRemix(remix);
+    setIsEditOpen(true);
+  };
+
+  const handleCreateClick = () => {
+    setIsCreateOpen(true);
   };
 
   const formatDate = (dateString: string) => {
@@ -64,13 +81,13 @@ const ContentRemixes = () => {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold">Remixes List</h2>
-        <Button className="gap-1">
+        <Button className="gap-1" onClick={handleCreateClick}>
           <Plus size={16} />
           Add New Remix
         </Button>
       </div>
 
-      {loading ? (
+      {isLoading ? (
         <div className="space-y-4">
           {Array(3).fill(0).map((_, i) => (
             <div key={i} className="flex space-y-2">
@@ -130,14 +147,14 @@ const ContentRemixes = () => {
                             <Eye size={16} />
                           </a>
                         </Button>
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" onClick={() => handleEditClick(remix)}>
                           <Edit size={16} />
                         </Button>
                         <Button 
                           variant="ghost" 
-                          size="icon"
+                          size="icon" 
                           className="text-destructive hover:text-destructive"
-                          onClick={() => deleteRemix(remix.id)}
+                          onClick={() => handleDeleteClick(remix)}
                         >
                           <Trash2 size={16} />
                         </Button>
@@ -150,6 +167,46 @@ const ContentRemixes = () => {
           </Table>
         </div>
       )}
+
+      {/* Create Form Dialog */}
+      {isCreateOpen && (
+        <RemixForm 
+          open={isCreateOpen}
+          onClose={() => setIsCreateOpen(false)}
+          onSuccess={() => queryClient.invalidateQueries({ queryKey: ['remixes'] })}
+        />
+      )}
+
+      {/* Edit Form Dialog */}
+      {selectedRemix && isEditOpen && (
+        <RemixForm 
+          open={isEditOpen}
+          onClose={() => setIsEditOpen(false)}
+          onSuccess={() => queryClient.invalidateQueries({ queryKey: ['remixes'] })}
+          initialData={selectedRemix}
+        />
+      )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!remixToDelete} onOpenChange={() => setRemixToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete the remix "{remixToDelete?.title}". This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmDelete} 
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

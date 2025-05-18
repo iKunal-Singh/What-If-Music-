@@ -12,5 +12,40 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: true
+  },
+  db: {
+    schema: 'public',
+  },
+  global: {
+    headers: {
+      'x-application-name': 'beatwave'
+    },
   }
 });
+
+// Check if we have storage buckets initialized
+export const initializeStorage = async () => {
+  try {
+    // Check if storage buckets exist, create if they don't
+    const { data: buckets } = await supabase.storage.listBuckets();
+    
+    const requiredBuckets = ['beats', 'images', 'remixes'];
+    for (const bucket of requiredBuckets) {
+      if (!buckets?.find(b => b.name === bucket)) {
+        console.log(`Creating storage bucket: ${bucket}`);
+        await supabase.storage.createBucket(bucket, {
+          public: true,
+          fileSizeLimit: 50 * 1024 * 1024 // 50MB limit
+        });
+      }
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Failed to initialize storage buckets:', error);
+    return false;
+  }
+};
+
+// Initialize storage when this module is imported
+initializeStorage().catch(console.error);

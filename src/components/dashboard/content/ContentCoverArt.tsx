@@ -1,5 +1,6 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
@@ -9,48 +10,64 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from 'sonner';
 import { CoverArt } from '@/lib/api';
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, 
+  AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from '@/components/ui/alert-dialog';
+import CoverArtForm from './CoverArtForm';
+import { deleteCoverArt } from '@/lib/api/content';
 
 const ContentCoverArt = () => {
-  const [coverArts, setCoverArts] = useState<CoverArt[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [selectedCoverArt, setSelectedCoverArt] = useState<CoverArt | null>(null);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [coverArtToDelete, setCoverArtToDelete] = useState<CoverArt | null>(null);
+  
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    fetchCoverArts();
-  }, []);
-
-  const fetchCoverArts = async () => {
-    try {
-      setLoading(true);
+  // Fetch cover arts with React Query
+  const { data: coverArts = [], isLoading } = useQuery({
+    queryKey: ['coverArts'],
+    queryFn: async () => {
       const { data, error } = await supabase
         .from('cover_art')
         .select('*')
         .order('created_at', { ascending: false });
         
       if (error) throw error;
-      setCoverArts(data || []);
-    } catch (error) {
-      console.error('Error fetching cover arts:', error);
-      toast.error('Failed to load cover arts');
-    } finally {
-      setLoading(false);
+      return data as CoverArt[];
     }
-  };
+  });
 
-  const deleteCoverArt = async (id: string) => {
-    try {
-      const { error } = await supabase
-        .from('cover_art')
-        .delete()
-        .eq('id', id);
-        
-      if (error) throw error;
-      
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteCoverArt(id),
+    onSuccess: () => {
       toast.success('Cover art deleted successfully');
-      setCoverArts(coverArts.filter(art => art.id !== id));
-    } catch (error) {
+      queryClient.invalidateQueries({ queryKey: ['coverArts'] });
+      setCoverArtToDelete(null);
+    },
+    onError: (error) => {
       console.error('Error deleting cover art:', error);
       toast.error('Failed to delete cover art');
     }
+  });
+
+  const handleDeleteClick = (coverArt: CoverArt) => {
+    setCoverArtToDelete(coverArt);
+  };
+
+  const confirmDelete = () => {
+    if (coverArtToDelete) {
+      deleteMutation.mutate(coverArtToDelete.id);
+    }
+  };
+
+  const handleEditClick = (coverArt: CoverArt) => {
+    setSelectedCoverArt(coverArt);
+    setIsEditOpen(true);
+  };
+
+  const handleCreateClick = () => {
+    setIsCreateOpen(true);
   };
 
   const formatDate = (dateString: string) => {
@@ -65,13 +82,13 @@ const ContentCoverArt = () => {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold">Cover Art List</h2>
-        <Button className="gap-1">
+        <Button className="gap-1" onClick={handleCreateClick}>
           <Plus size={16} />
           Add New Cover Art
         </Button>
       </div>
 
-      {loading ? (
+      {isLoading ? (
         <div className="space-y-4">
           {Array(3).fill(0).map((_, i) => (
             <div key={i} className="flex space-y-2">
@@ -134,14 +151,14 @@ const ContentCoverArt = () => {
                             <Eye size={16} />
                           </a>
                         </Button>
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" onClick={() => handleEditClick(art)}>
                           <Edit size={16} />
                         </Button>
                         <Button 
                           variant="ghost" 
                           size="icon"
                           className="text-destructive hover:text-destructive"
-                          onClick={() => deleteCoverArt(art.id)}
+                          onClick={() => handleDeleteClick(art)}
                         >
                           <Trash2 size={16} />
                         </Button>
@@ -154,6 +171,46 @@ const ContentCoverArt = () => {
           </Table>
         </div>
       )}
+
+      {/* Create Form Dialog */}
+      {isCreateOpen && (
+        <CoverArtForm 
+          open={isCreateOpen}
+          onClose={() => setIsCreateOpen(false)}
+          onSuccess={() => queryClient.invalidateQueries({ queryKey: ['coverArts'] })}
+        />
+      )}
+
+      {/* Edit Form Dialog */}
+      {selectedCoverArt && isEditOpen && (
+        <CoverArtForm 
+          open={isEditOpen}
+          onClose={() => setIsEditOpen(false)}
+          onSuccess={() => queryClient.invalidateQueries({ queryKey: ['coverArts'] })}
+          initialData={selectedCoverArt}
+        />
+      )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!coverArtToDelete} onOpenChange={() => setCoverArtToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete the cover art "{coverArtToDelete?.title}". This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmDelete} 
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
