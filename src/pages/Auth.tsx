@@ -1,15 +1,17 @@
 
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuthContext } from "@/context/AuthContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LoginForm from "@/components/auth/LoginForm";
 import SignUpForm from "@/components/auth/SignUpForm";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Home } from "lucide-react";
 
 export default function Auth() {
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
-  const { user } = useAuthContext();
+  const { user, loading } = useAuthContext();
   const navigate = useNavigate();
   
   // Use useEffect for navigation instead of doing it directly in the component
@@ -19,11 +21,19 @@ export default function Auth() {
     }
   }, [user, navigate]);
 
+  if (loading) {
+    return (
+      <div className="container flex items-center justify-center min-h-screen">
+        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="container flex items-center justify-center min-h-screen py-8">
+    <div className="container flex flex-col items-center justify-center min-h-screen py-8">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl text-center">Welcome</CardTitle>
+          <CardTitle className="text-2xl text-center">Welcome to BeatWave</CardTitle>
         </CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "login" | "signup")}>
@@ -39,6 +49,14 @@ export default function Auth() {
             </TabsContent>
           </Tabs>
         </CardContent>
+        <CardFooter className="flex justify-center border-t pt-6">
+          <Button variant="outline" size="sm" asChild>
+            <Link to="/" className="flex items-center gap-2">
+              <Home size={16} />
+              Back to Home
+            </Link>
+          </Button>
+        </CardFooter>
       </Card>
     </div>
   );

@@ -24,13 +24,11 @@ const DashboardUsers = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        // Get users from auth.users through admin functions (would need Edge Function in production)
-        // For demo, we'll use profiles if they exist
+        // Get users from profiles table
         const { data, error } = await supabase
           .from('profiles')
           .select('*')
-          .order('created_at', { ascending: false })
-          .limit(10);
+          .order('created_at', { ascending: false });
 
         if (error) throw error;
 
