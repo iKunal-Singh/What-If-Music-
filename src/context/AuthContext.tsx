@@ -43,10 +43,12 @@ export function RequireAuth({ children }: { children: ReactNode }) {
     );
   }
 
-  // Redirect to login if not authenticated
+  // If not authenticated after loading completes, redirect to auth
   if (!user) {
+    console.log("RequireAuth: User not authenticated, redirecting to /auth");
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
+  console.log("RequireAuth: User authenticated, rendering children");
   return <>{children}</>;
 }

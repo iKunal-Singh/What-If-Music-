@@ -1,6 +1,4 @@
 
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from "@/context/AuthContext";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import DashboardOverview from "@/components/dashboard/DashboardOverview";
@@ -10,20 +8,11 @@ import DashboardUploads from "@/components/dashboard/DashboardUploads";
 import DashboardSettings from "@/components/dashboard/DashboardSettings";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
 
 const Dashboard = () => {
   const { user, loading } = useAuthContext();
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    // If not authenticated after loading completes, redirect to auth
-    if (!loading && !user) {
-      toast.error('Please log in to access the dashboard');
-      navigate('/auth');
-    }
-  }, [user, navigate, loading]);
-
+  // Show loading spinner while authentication state is being determined
   if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
@@ -32,8 +21,11 @@ const Dashboard = () => {
     );
   }
   
+  // The RequireAuth component in App.tsx will handle redirection if user is not authenticated
+  // This is just an extra safety check
   if (!user) {
-    return null; // Don't render anything while redirecting
+    console.log("Dashboard: No user found, but this should be handled by RequireAuth");
+    return null;
   }
 
   return (
