@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
@@ -9,14 +8,16 @@ export function useAuth() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Move auth methods outside useEffect to prevent recreation
+  // Keep auth methods outside useEffect to prevent recreation
   const signIn = async (email: string, password: string) => {
     try {
       const response = await supabase.auth.signInWithPassword({ email, password });
       if (response.error) {
         toast.error(response.error.message);
+        return response;
       } else if (response.data?.user) {
         toast.success('Signed in successfully!');
+        return response;
       }
       return response;
     } catch (error: any) {
@@ -62,35 +63,33 @@ export function useAuth() {
     console.log('Auth hook initializing');
     let mounted = true;
 
-    const handleAuthChange = (event: string, currentSession: Session | null) => {
+    // Set up auth state listener FIRST to ensure we don't miss events
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, currentSession) => {
       console.log(`Auth state changed: ${event}`, currentSession?.user?.email || 'no session');
       
       if (!mounted) return;
       
-      // Update state with session info
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
-      setLoading(false);
-    };
-
-    // Set up auth state listener FIRST to ensure we don't miss events
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(handleAuthChange);
+      setLoading(false); // Important: set loading to false after auth state change
+    });
 
     // THEN check for existing session
     const getInitialSession = async () => {
       try {
+        console.log("Checking for initial session...");
         const { data } = await supabase.auth.getSession();
         console.log("Initial session check:", data.session?.user?.email || 'no session');
         
         if (mounted) {
           setSession(data.session);
           setUser(data.session?.user ?? null);
-          setLoading(false);
+          setLoading(false); // Important: set loading to false after getting initial session
         }
       } catch (error) {
         console.error('Failed to get initial session:', error);
         if (mounted) {
-          setLoading(false);
+          setLoading(false); // Important: set loading to false even on error
         }
       }
     };

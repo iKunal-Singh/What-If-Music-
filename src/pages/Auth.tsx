@@ -23,7 +23,7 @@ export default function Auth() {
     
     // Only redirect if we have a user, loading is complete, and we're not already redirecting
     if (user && !loading && !redirecting) {
-      console.log("Auth: Preparing redirect to", from);
+      console.log("Auth: User is authenticated, preparing redirect to", from);
       
       // Set redirecting flag to prevent multiple redirects
       setRedirecting(true);
@@ -38,10 +38,12 @@ export default function Auth() {
     }
   }, [user, loading, navigate, from, redirecting]);
 
+  // Show loading indicator during auth check
   if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <span className="ml-2">Checking authentication status...</span>
       </div>
     );
   }
@@ -51,11 +53,12 @@ export default function Auth() {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2">Redirecting...</span>
+        <span className="ml-2">Redirecting to dashboard...</span>
       </div>
     );
   }
 
+  // Only show auth forms if not authenticated and not redirecting
   return (
     <div className="container flex items-center justify-center min-h-screen py-8">
       <Card className="w-full max-w-md">
