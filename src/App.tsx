@@ -12,6 +12,7 @@ import Remixes from "./pages/Remixes";
 import CoverArt from "./pages/CoverArt";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
+import Dashboard from "./pages/Dashboard";
 import UIEffects from "./components/effects/UIEffects";
 import ButtonEffects from "./components/effects/ButtonEffects";
 
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/remixes" element={<Remixes />} />
             <Route path="/cover-art" element={<CoverArt />} />
             <Route path="/about" element={<About />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
