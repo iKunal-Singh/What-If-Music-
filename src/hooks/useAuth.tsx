@@ -12,7 +12,8 @@ export function useAuth() {
   useEffect(() => {
     // Set up auth state listener FIRST to ensure we don't miss events
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (event, session) => {
+        console.log('Auth state changed:', event);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -21,6 +22,7 @@ export function useAuth() {
 
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Got session:', session ? 'yes' : 'no');
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);

@@ -17,6 +17,7 @@ export default function Auth() {
   useEffect(() => {
     // Check for user and redirect to dashboard if logged in
     if (user) {
+      console.log("User is already authenticated, redirecting to dashboard");
       navigate("/dashboard", { replace: true });
     }
   }, [user, navigate]);

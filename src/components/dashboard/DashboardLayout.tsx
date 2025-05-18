@@ -11,7 +11,7 @@ import {
   SidebarMenuItem, 
   SidebarInset
 } from "@/components/ui/sidebar";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Users, 
@@ -30,7 +30,8 @@ interface DashboardLayoutProps {
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const navigate = useNavigate();
-  const { signOut } = useAuthContext();
+  const location = useLocation();
+  const { signOut, user } = useAuthContext();
 
   const handleSignOut = async () => {
     try {
@@ -126,7 +127,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Back to Site">
-                  <Link to="/" className="flex items-center gap-2">
+                  <Link to="/" className="flex items-center gap-2 w-full">
                     <Home size={18} />
                     <span>Back to Site</span>
                   </Link>
