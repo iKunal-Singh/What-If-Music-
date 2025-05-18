@@ -1,54 +1,63 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Activity, Music, Image, Download } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from '@/lib/supabase';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
-import { useQuery } from '@tanstack/react-query';
-
-interface StatsData {
-  beatsCount: number;
-  remixesCount: number;
-  coverArtCount: number;
-  totalDownloads: number;
-}
-
-const fetchStats = async (): Promise<StatsData> => {
-  try {
-    // Fetch counts for each content type
-    const [beatsData, remixesData, coverArtData, downloadsData] = await Promise.all([
-      supabase.from('beats').select('id', { count: 'exact', head: true }),
-      supabase.from('remixes').select('id', { count: 'exact', head: true }),
-      supabase.from('cover_art').select('id', { count: 'exact', head: true }),
-      supabase.from('downloads').select('id', { count: 'exact', head: true })
-    ]);
-
-    // Check for errors
-    if (beatsData.error) throw new Error(beatsData.error.message);
-    if (remixesData.error) throw new Error(remixesData.error.message);
-    if (coverArtData.error) throw new Error(coverArtData.error.message);
-    if (downloadsData.error) throw new Error(downloadsData.error.message);
-
-    return {
-      beatsCount: beatsData.count || 0,
-      remixesCount: remixesData.count || 0,
-      coverArtCount: coverArtData.count || 0,
-      totalDownloads: downloadsData.count || 0
-    };
-  } catch (error: any) {
-    console.error('Error fetching stats:', error);
-    toast.error('Failed to load dashboard statistics');
-    throw error;
-  }
-};
+import { getContentStats } from '@/lib/api/content';
 
 const DashboardOverview = () => {
-  const { data: stats, isLoading, error } = useQuery({
+  const { 
+    data: stats, 
+    isLoading, 
+    error,
+    refetch 
+  } = useQuery({
     queryKey: ['dashboardStats'],
-    queryFn: fetchStats,
+    queryFn: getContentStats,
     refetchInterval: 30000, // Refetch every 30 seconds for real-time updates
   });
+
+  // Subscribe to realtime changes
+  useEffect(() => {
+    // Setup realtime subscription for all content tables
+    const beatsChannel = supabase
+      .channel('public:beats')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'beats' }, () => {
+        refetch();
+      })
+      .subscribe();
+
+    const remixesChannel = supabase
+      .channel('public:remixes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'remixes' }, () => {
+        refetch();
+      })
+      .subscribe();
+      
+    const coverArtChannel = supabase
+      .channel('public:cover_art')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'cover_art' }, () => {
+        refetch();
+      })
+      .subscribe();
+      
+    const downloadsChannel = supabase
+      .channel('public:downloads')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'downloads' }, () => {
+        refetch();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(beatsChannel);
+      supabase.removeChannel(remixesChannel);
+      supabase.removeChannel(coverArtChannel);
+      supabase.removeChannel(downloadsChannel);
+    };
+  }, [refetch]);
 
   // Show error toast if query fails
   useEffect(() => {
@@ -118,7 +127,7 @@ const DashboardOverview = () => {
             {isLoading ? (
               <Skeleton className="h-7 w-16" />
             ) : (
-              <div className="text-2xl font-bold">{stats?.totalDownloads || 0}</div>
+              <div className="text-2xl font-bold">{stats?.downloadsCount || 0}</div>
             )}
           </CardContent>
         </Card>
