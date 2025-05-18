@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from "@/context/AuthContext";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
@@ -10,23 +10,21 @@ import DashboardUploads from "@/components/dashboard/DashboardUploads";
 import DashboardSettings from "@/components/dashboard/DashboardSettings";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 const Dashboard = () => {
   const { user, loading } = useAuthContext();
   const navigate = useNavigate();
-  const [mounted, setMounted] = useState(false);
 
-  // Protect dashboard from unauthorized access with better loading handling
   useEffect(() => {
-    setMounted(true);
-    
+    // If not authenticated after loading completes, redirect to auth
     if (!loading && !user) {
+      toast.error('Please log in to access the dashboard');
       navigate('/auth');
     }
   }, [user, navigate, loading]);
 
-  // Don't render until we've checked auth status to prevent flashing content
-  if (!mounted || loading) {
+  if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />

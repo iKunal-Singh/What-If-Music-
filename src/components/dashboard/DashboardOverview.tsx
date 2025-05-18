@@ -4,50 +4,59 @@ import { Activity, Music, Image, Download } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from '@/lib/supabase';
 import { Skeleton } from '@/components/ui/skeleton';
+import { toast } from 'sonner';
+import { useQuery } from '@tanstack/react-query';
 
 interface StatsData {
   beatsCount: number;
   remixesCount: number;
   coverArtCount: number;
   totalDownloads: number;
-  loading: boolean;
 }
 
+const fetchStats = async (): Promise<StatsData> => {
+  try {
+    // Fetch counts for each content type
+    const [beatsData, remixesData, coverArtData, downloadsData] = await Promise.all([
+      supabase.from('beats').select('id', { count: 'exact', head: true }),
+      supabase.from('remixes').select('id', { count: 'exact', head: true }),
+      supabase.from('cover_art').select('id', { count: 'exact', head: true }),
+      supabase.from('downloads').select('id', { count: 'exact', head: true })
+    ]);
+
+    // Check for errors
+    if (beatsData.error) throw new Error(beatsData.error.message);
+    if (remixesData.error) throw new Error(remixesData.error.message);
+    if (coverArtData.error) throw new Error(coverArtData.error.message);
+    if (downloadsData.error) throw new Error(downloadsData.error.message);
+
+    return {
+      beatsCount: beatsData.count || 0,
+      remixesCount: remixesData.count || 0,
+      coverArtCount: coverArtData.count || 0,
+      totalDownloads: downloadsData.count || 0
+    };
+  } catch (error: any) {
+    console.error('Error fetching stats:', error);
+    toast.error('Failed to load dashboard statistics');
+    throw error;
+  }
+};
+
 const DashboardOverview = () => {
-  const [stats, setStats] = useState<StatsData>({
-    beatsCount: 0,
-    remixesCount: 0,
-    coverArtCount: 0,
-    totalDownloads: 0,
-    loading: true
+  const { data: stats, isLoading, error } = useQuery({
+    queryKey: ['dashboardStats'],
+    queryFn: fetchStats,
+    refetchInterval: 30000, // Refetch every 30 seconds for real-time updates
   });
 
+  // Show error toast if query fails
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        // Fetch counts for each content type
-        const [beatsData, remixesData, coverArtData, downloadsData] = await Promise.all([
-          supabase.from('beats').select('id', { count: 'exact', head: true }),
-          supabase.from('remixes').select('id', { count: 'exact', head: true }),
-          supabase.from('cover_art').select('id', { count: 'exact', head: true }),
-          supabase.from('downloads').select('id', { count: 'exact', head: true })
-        ]);
-
-        setStats({
-          beatsCount: beatsData.count || 0,
-          remixesCount: remixesData.count || 0,
-          coverArtCount: coverArtData.count || 0,
-          totalDownloads: downloadsData.count || 0,
-          loading: false
-        });
-      } catch (error) {
-        console.error('Error fetching stats:', error);
-        setStats(prev => ({ ...prev, loading: false }));
-      }
-    };
-
-    fetchStats();
-  }, []);
+    if (error) {
+      toast.error('Failed to load dashboard statistics');
+      console.error('Error fetching stats:', error);
+    }
+  }, [error]);
 
   return (
     <div>
@@ -61,10 +70,10 @@ const DashboardOverview = () => {
             <Music className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            {stats.loading ? (
+            {isLoading ? (
               <Skeleton className="h-7 w-16" />
             ) : (
-              <div className="text-2xl font-bold">{stats.beatsCount}</div>
+              <div className="text-2xl font-bold">{stats?.beatsCount || 0}</div>
             )}
           </CardContent>
         </Card>
@@ -76,10 +85,10 @@ const DashboardOverview = () => {
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            {stats.loading ? (
+            {isLoading ? (
               <Skeleton className="h-7 w-16" />
             ) : (
-              <div className="text-2xl font-bold">{stats.remixesCount}</div>
+              <div className="text-2xl font-bold">{stats?.remixesCount || 0}</div>
             )}
           </CardContent>
         </Card>
@@ -91,10 +100,10 @@ const DashboardOverview = () => {
             <Image className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            {stats.loading ? (
+            {isLoading ? (
               <Skeleton className="h-7 w-16" />
             ) : (
-              <div className="text-2xl font-bold">{stats.coverArtCount}</div>
+              <div className="text-2xl font-bold">{stats?.coverArtCount || 0}</div>
             )}
           </CardContent>
         </Card>
@@ -106,10 +115,10 @@ const DashboardOverview = () => {
             <Download className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            {stats.loading ? (
+            {isLoading ? (
               <Skeleton className="h-7 w-16" />
             ) : (
-              <div className="text-2xl font-bold">{stats.totalDownloads}</div>
+              <div className="text-2xl font-bold">{stats?.totalDownloads || 0}</div>
             )}
           </CardContent>
         </Card>

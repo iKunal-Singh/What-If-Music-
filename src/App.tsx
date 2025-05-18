@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthProvider, RequireAuth } from "@/context/AuthContext";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Beats from "./pages/Beats";
@@ -41,7 +41,11 @@ const App = () => (
             <Route path="/remixes" element={<Remixes />} />
             <Route path="/cover-art" element={<CoverArt />} />
             <Route path="/about" element={<About />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard" element={
+              <RequireAuth>
+                <Dashboard />
+              </RequireAuth>
+            } />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
