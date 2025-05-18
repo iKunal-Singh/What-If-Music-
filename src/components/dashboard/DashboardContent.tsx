@@ -47,15 +47,15 @@ const DashboardContent = () => {
             </TabsList>
             
             <TabsContent value="beats">
-              <ContentBeats beats={beats} isLoading={beatsLoading} error={beatsError} />
+              <ContentBeats />
             </TabsContent>
             
             <TabsContent value="remixes">
-              <ContentRemixes remixes={remixes} isLoading={remixesLoading} error={remixesError} />
+              <ContentRemixes />
             </TabsContent>
             
             <TabsContent value="coverArt">
-              <ContentCoverArt coverArt={coverArt} isLoading={coverArtLoading} error={coverArtError} />
+              <ContentCoverArt />
             </TabsContent>
           </Tabs>
         </CardContent>

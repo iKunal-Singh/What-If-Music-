@@ -14,10 +14,10 @@ export default function Auth() {
   const { user, loading } = useAuthContext();
   const navigate = useNavigate();
   
-  // Use useEffect for navigation instead of doing it directly in the component
   useEffect(() => {
+    // Check for user and redirect to dashboard if logged in
     if (user) {
-      navigate("/dashboard");
+      navigate("/dashboard", { replace: true });
     }
   }, [user, navigate]);
 

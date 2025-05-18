@@ -21,7 +21,7 @@ const Dashboard = () => {
     setMounted(true);
     
     if (!loading && !user) {
-      navigate('/auth');
+      navigate('/auth', { replace: true });
     }
   }, [user, navigate, loading]);
 
