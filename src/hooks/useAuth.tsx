@@ -1,4 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
+
+import { useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
@@ -8,16 +9,14 @@ export function useAuth() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Keep auth methods outside useEffect to prevent recreation
+  // Authentication methods
   const signIn = async (email: string, password: string) => {
     try {
       const response = await supabase.auth.signInWithPassword({ email, password });
       if (response.error) {
         toast.error(response.error.message);
-        return response;
       } else if (response.data?.user) {
         toast.success('Signed in successfully!');
-        return response;
       }
       return response;
     } catch (error: any) {
@@ -60,45 +59,49 @@ export function useAuth() {
   };
 
   useEffect(() => {
+    // Flag to track mounted state to prevent updates after unmount
+    let isMounted = true;
+    
     console.log('Auth hook initializing');
-    let mounted = true;
-
-    // Set up auth state listener FIRST to ensure we don't miss events
+    
+    // First, setup the auth state change listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, currentSession) => {
       console.log(`Auth state changed: ${event}`, currentSession?.user?.email || 'no session');
       
-      if (!mounted) return;
-      
-      setSession(currentSession);
-      setUser(currentSession?.user ?? null);
-      setLoading(false); // Important: set loading to false after auth state change
+      if (isMounted) {
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
+        setLoading(false);
+      }
     });
-
-    // THEN check for existing session
+    
+    // Then, get the initial session
     const getInitialSession = async () => {
       try {
         console.log("Checking for initial session...");
         const { data } = await supabase.auth.getSession();
         console.log("Initial session check:", data.session?.user?.email || 'no session');
         
-        if (mounted) {
+        if (isMounted) {
           setSession(data.session);
           setUser(data.session?.user ?? null);
-          setLoading(false); // Important: set loading to false after getting initial session
+          // Important: make sure to set loading to false
+          setLoading(false);
         }
       } catch (error) {
-        console.error('Failed to get initial session:', error);
-        if (mounted) {
-          setLoading(false); // Important: set loading to false even on error
+        console.error('Error getting session:', error);
+        if (isMounted) {
+          setLoading(false);
         }
       }
     };
     
     getInitialSession();
-
+    
+    // Clean up
     return () => {
       console.log('Auth hook cleanup');
-      mounted = false;
+      isMounted = false;
       subscription.unsubscribe();
     };
   }, []);

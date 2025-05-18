@@ -21,20 +21,11 @@ export default function Auth() {
   useEffect(() => {
     console.log(`Auth page: user=${!!user}, loading=${loading}, redirecting=${redirecting}`);
     
-    // Only redirect if we have a user, loading is complete, and we're not already redirecting
+    // Only redirect if user is authenticated and loading is complete
     if (user && !loading && !redirecting) {
       console.log("Auth: User is authenticated, preparing redirect to", from);
-      
-      // Set redirecting flag to prevent multiple redirects
       setRedirecting(true);
-      
-      // Use timeout to ensure state updates have processed
-      const timer = setTimeout(() => {
-        console.log("Auth: Executing redirect to", from);
-        navigate(from, { replace: true });
-      }, 100);
-      
-      return () => clearTimeout(timer);
+      navigate(from, { replace: true });
     }
   }, [user, loading, navigate, from, redirecting]);
 
@@ -48,7 +39,7 @@ export default function Auth() {
     );
   }
 
-  // Show loading indicator during redirect
+  // If we're authenticated or in the process of redirecting, show a loading spinner
   if (user || redirecting) {
     return (
       <div className="flex h-screen w-full items-center justify-center">

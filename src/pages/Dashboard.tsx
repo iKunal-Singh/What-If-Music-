@@ -24,14 +24,12 @@ const Dashboard = () => {
     );
   }
   
-  // The RequireAuth component in App.tsx handles redirection if user is not authenticated
+  // The RequireAuth component in App.tsx should handle redirection if user is not authenticated
   // This is just an additional safety check
   if (!user) {
     console.log("Dashboard: No user found, this should be handled by RequireAuth");
     return null;
   }
-
-  console.log("Dashboard: Rendering dashboard content for user:", user.email);
 
   return (
     <DashboardLayout>
