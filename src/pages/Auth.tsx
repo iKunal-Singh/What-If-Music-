@@ -22,7 +22,10 @@ export default function Auth() {
     // Only redirect if we have a user and loading is complete
     if (user && !loading) {
       console.log("Auth: Redirecting authenticated user to", from);
-      navigate(from, { replace: true });
+      // Use timeout to ensure state updates have processed
+      setTimeout(() => {
+        navigate(from, { replace: true });
+      }, 0);
     }
   }, [user, loading, navigate, from]);
 
@@ -35,9 +38,14 @@ export default function Auth() {
   }
 
   // If we have a user and we're not loading, we'll redirect via the useEffect
-  // This is just a fallback in case the useEffect hasn't fired yet
+  // This prevents rendering the auth form momentarily before redirect
   if (user) {
-    return null;
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <span className="ml-2">Redirecting...</span>
+      </div>
+    );
   }
 
   return (

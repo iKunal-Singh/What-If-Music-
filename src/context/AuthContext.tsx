@@ -33,9 +33,20 @@ export function useAuthContext() {
 export function RequireAuth({ children }: { children: ReactNode }) {
   const { user, loading } = useAuthContext();
   const location = useLocation();
+  const [checkingSession, setCheckingSession] = useState(true);
+  
+  // Add a small delay to ensure auth state is fully initialized
+  useEffect(() => {
+    if (!loading) {
+      const timer = setTimeout(() => {
+        setCheckingSession(false);
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [loading]);
 
   // Don't render anything while we check for authentication
-  if (loading) {
+  if (loading || checkingSession) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
