@@ -18,7 +18,11 @@ const formSchema = z.object({
 
 type LoginFormValues = z.infer<typeof formSchema>;
 
-export default function LoginForm() {
+type LoginFormProps = {
+  redirectPath?: string;
+};
+
+export default function LoginForm({ redirectPath = "/dashboard" }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { signIn } = useAuthContext();
@@ -37,7 +41,7 @@ export default function LoginForm() {
       setIsLoading(true);
       const { error } = await signIn(data.email, data.password);
       if (error) throw error;
-      navigate("/dashboard");
+      navigate(redirectPath);
     } catch (error: any) {
       toast.error(error.message || "Failed to sign in");
     } finally {
