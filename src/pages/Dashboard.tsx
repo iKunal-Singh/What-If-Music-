@@ -10,28 +10,20 @@ import DashboardUploads from "@/components/dashboard/DashboardUploads";
 import DashboardSettings from "@/components/dashboard/DashboardSettings";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
 
 const Dashboard = () => {
-  const { user, loading, session } = useAuthContext();
+  const { user, loading } = useAuthContext();
   const navigate = useNavigate();
   const [mounted, setMounted] = useState(false);
-  const [activeTab, setActiveTab] = useState("overview");
 
+  // Protect dashboard from unauthorized access with better loading handling
   useEffect(() => {
     setMounted(true);
     
-    if (!loading && !user && !session) {
-      console.log("No authenticated user found, redirecting to auth page");
-      navigate('/auth', { replace: true });
-    } else if (user) {
-      console.log("User authenticated:", user.email);
-      // Only show welcome toast once when component mounts
-      if (!mounted) {
-        toast.success(`Welcome back, ${user.email}`);
-      }
+    if (!loading && !user) {
+      navigate('/auth');
     }
-  }, [user, navigate, loading, session, mounted]);
+  }, [user, navigate, loading]);
 
   // Don't render until we've checked auth status to prevent flashing content
   if (!mounted || loading) {
@@ -42,15 +34,13 @@ const Dashboard = () => {
     );
   }
   
-  // Extra safety check - if somehow we got this far without a user, redirect
   if (!user) {
-    navigate('/auth', { replace: true });
-    return null;
+    return null; // Don't render anything while redirecting
   }
 
   return (
     <DashboardLayout>
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs defaultValue="overview" className="w-full">
         <TabsList className="mb-6 border-b w-full justify-start rounded-none gap-6 px-0 h-auto pb-4">
           <TabsTrigger value="overview" className="data-[state=active]:shadow-none text-md">Overview</TabsTrigger>
           <TabsTrigger value="users" className="data-[state=active]:shadow-none text-md">User Insights</TabsTrigger>

@@ -35,21 +35,11 @@ export default function LoginForm() {
   const onSubmit = async (data: LoginFormValues) => {
     try {
       setIsLoading(true);
-      const { error, data: authData } = await signIn(data.email, data.password);
-      
-      if (error) {
-        console.error("Sign in error:", error);
-        toast.error(error.message || "Failed to sign in");
-        return;
-      }
-      
-      if (authData?.user) {
-        console.log("Successfully signed in, navigating to dashboard");
-        navigate("/dashboard", { replace: true });
-      }
+      const { error } = await signIn(data.email, data.password);
+      if (error) throw error;
+      navigate("/dashboard");
     } catch (error: any) {
-      console.error("Unexpected error during sign in:", error);
-      toast.error(error.message || "An unexpected error occurred");
+      toast.error(error.message || "Failed to sign in");
     } finally {
       setIsLoading(false);
     }
