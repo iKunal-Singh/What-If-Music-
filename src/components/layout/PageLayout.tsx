@@ -1,20 +1,29 @@
 
-import React from 'react';
-import Header from '../layout/Header';
-import Footer from '../layout/Footer';
+import React, { ReactNode } from 'react';
+import Header from './Header';
+import Footer from './Footer';
+import ErrorBoundary from '../common/ErrorBoundary';
 
 interface PageLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-export const PageLayout: React.FC<PageLayoutProps> = ({ children }) => {
+export const PageLayout = ({ children }: PageLayoutProps) => {
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-grow">
-        {children}
+      <ErrorBoundary>
+        <Header />
+      </ErrorBoundary>
+      
+      <main className="flex-1">
+        <ErrorBoundary>
+          {children}
+        </ErrorBoundary>
       </main>
-      <Footer />
+      
+      <ErrorBoundary>
+        <Footer />
+      </ErrorBoundary>
     </div>
   );
 };
