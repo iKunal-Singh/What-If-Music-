@@ -9,6 +9,9 @@ import DashboardSettings from "@/components/dashboard/DashboardSettings";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2 } from 'lucide-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import APIErrorBoundary from "@/components/common/APIErrorBoundary";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -16,14 +19,28 @@ const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: false,
       retry: 1,
+      staleTime: 60000, // 1 minute
     },
   },
 });
 
 const Dashboard = () => {
   const { user, loading } = useAuthContext();
+  const location = useLocation();
+  const navigate = useNavigate();
   
-  console.log(`Dashboard: user=${!!user}, loading=${loading}`);
+  // Extract tab from URL parameters or default to "overview"
+  const urlParams = new URLSearchParams(location.search);
+  const defaultTab = urlParams.get('tab') || 'overview';
+  const [activeTab, setActiveTab] = useState(defaultTab);
+  
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    // Update URL with the selected tab
+    navigate(`/dashboard?tab=${value}`, { replace: true });
+  };
+  
+  console.log(`Dashboard: user=${!!user}, loading=${loading}, activeTab=${activeTab}`);
 
   // Show loading spinner while authentication state is being determined
   if (loading) {
@@ -44,37 +61,39 @@ const Dashboard = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <DashboardLayout>
-        <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="mb-6 border-b w-full justify-start rounded-none gap-6 px-0 h-auto pb-4">
-            <TabsTrigger value="overview" className="data-[state=active]:shadow-none text-md">Overview</TabsTrigger>
-            <TabsTrigger value="users" className="data-[state=active]:shadow-none text-md">User Insights</TabsTrigger>
-            <TabsTrigger value="content" className="data-[state=active]:shadow-none text-md">Content Management</TabsTrigger>
-            <TabsTrigger value="uploads" className="data-[state=active]:shadow-none text-md">Upload Management</TabsTrigger>
-            <TabsTrigger value="settings" className="data-[state=active]:shadow-none text-md">Settings</TabsTrigger>
-          </TabsList>
+      <APIErrorBoundary fallbackMessage="Failed to load dashboard">
+        <DashboardLayout>
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+            <TabsList className="mb-6 border-b w-full justify-start rounded-none gap-6 px-0 h-auto pb-4">
+              <TabsTrigger value="overview" className="data-[state=active]:shadow-none text-md">Overview</TabsTrigger>
+              <TabsTrigger value="users" className="data-[state=active]:shadow-none text-md">User Insights</TabsTrigger>
+              <TabsTrigger value="content" className="data-[state=active]:shadow-none text-md">Content Management</TabsTrigger>
+              <TabsTrigger value="uploads" className="data-[state=active]:shadow-none text-md">Upload Management</TabsTrigger>
+              <TabsTrigger value="settings" className="data-[state=active]:shadow-none text-md">Settings</TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="overview">
-            <DashboardOverview />
-          </TabsContent>
+            <TabsContent value="overview">
+              <DashboardOverview />
+            </TabsContent>
 
-          <TabsContent value="users">
-            <DashboardUsers />
-          </TabsContent>
+            <TabsContent value="users">
+              <DashboardUsers />
+            </TabsContent>
 
-          <TabsContent value="content">
-            <DashboardContent />
-          </TabsContent>
+            <TabsContent value="content">
+              <DashboardContent />
+            </TabsContent>
 
-          <TabsContent value="uploads">
-            <DashboardUploads />
-          </TabsContent>
+            <TabsContent value="uploads">
+              <DashboardUploads />
+            </TabsContent>
 
-          <TabsContent value="settings">
-            <DashboardSettings />
-          </TabsContent>
-        </Tabs>
-      </DashboardLayout>
+            <TabsContent value="settings">
+              <DashboardSettings />
+            </TabsContent>
+          </Tabs>
+        </DashboardLayout>
+      </APIErrorBoundary>
     </QueryClientProvider>
   );
 };

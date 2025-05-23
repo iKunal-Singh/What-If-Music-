@@ -3,6 +3,7 @@ import React, { ReactNode } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import ErrorBoundary from '../common/ErrorBoundary';
+import { APIErrorFallback } from '../common/APIErrorBoundary';
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -11,7 +12,15 @@ interface PageLayoutProps {
 export const PageLayout = ({ children }: PageLayoutProps) => {
   return (
     <div className="min-h-screen flex flex-col">
-      <ErrorBoundary>
+      <ErrorBoundary
+        fallback={(error, resetErrorBoundary) => (
+          <APIErrorFallback 
+            error={error} 
+            resetErrorBoundary={resetErrorBoundary}
+            message="Failed to load header"
+          />
+        )}
+      >
         <Header />
       </ErrorBoundary>
       
@@ -21,7 +30,15 @@ export const PageLayout = ({ children }: PageLayoutProps) => {
         </ErrorBoundary>
       </main>
       
-      <ErrorBoundary>
+      <ErrorBoundary
+        fallback={(error, resetErrorBoundary) => (
+          <APIErrorFallback 
+            error={error} 
+            resetErrorBoundary={resetErrorBoundary}
+            message="Failed to load footer"
+          />
+        )}
+      >
         <Footer />
       </ErrorBoundary>
     </div>

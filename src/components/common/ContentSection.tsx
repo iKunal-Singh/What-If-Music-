@@ -1,21 +1,29 @@
 
 import React, { ReactNode } from 'react';
-import ErrorBoundary from './ErrorBoundary';
+import APIErrorBoundary from './APIErrorBoundary';
 
 interface ContentSectionProps {
   children: ReactNode;
   title?: string;
   className?: string;
+  onErrorReset?: () => void;
+  errorMessage?: string;
 }
 
-const ContentSection = ({ children, title, className = '' }: ContentSectionProps) => {
+const ContentSection = ({ 
+  children, 
+  title, 
+  className = '',
+  onErrorReset,
+  errorMessage = "Failed to load content"
+}: ContentSectionProps) => {
   return (
-    <ErrorBoundary>
+    <APIErrorBoundary onReset={onErrorReset} fallbackMessage={errorMessage}>
       <section className={className}>
         {title && <h2 className="text-2xl font-bold mb-6">{title}</h2>}
         {children}
       </section>
-    </ErrorBoundary>
+    </APIErrorBoundary>
   );
 };
 
