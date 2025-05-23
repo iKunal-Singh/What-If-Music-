@@ -41,12 +41,44 @@ export interface CoverArt {
   updated_at: string;
 }
 
-// Fetch all beats
-export const fetchBeats = async (): Promise<Beat[]> => {
-  const { data, error } = await supabase
+// Optional filters for fetching beats
+export interface BeatFilters {
+  bpm?: number;
+  key?: string;
+  tags?: string[];
+  title?: string; // Added for potential future use or consistency with other searches
+  producer?: string; // Added for potential future use
+}
+
+// Fetch all beats with optional filtering
+export const fetchBeats = async (filters?: BeatFilters): Promise<Beat[]> => {
+  let query = supabase
     .from('beats')
-    .select('*')
-    .order('created_at', { ascending: false });
+    .select('*');
+
+  if (filters) {
+    if (filters.bpm) {
+      query = query.eq('bpm', filters.bpm);
+    }
+    if (filters.key) {
+      // Use ilike for case-insensitive key matching. Consider if exact match is better.
+      query = query.ilike('key', `%${filters.key}%`);
+    }
+    if (filters.tags && filters.tags.length > 0) {
+      // 'cs' checks if the array column 'tags' contains any of the values in filters.tags
+      query = query.cs('tags', filters.tags);
+    }
+    if (filters.title) {
+      query = query.ilike('title', `%${filters.title}%`);
+    }
+    if (filters.producer) {
+      query = query.ilike('producer', `%${filters.producer}%`);
+    }
+  }
+
+  query = query.order('created_at', { ascending: false });
+
+  const { data, error } = await query;
 
   if (error) {
     console.error('Error fetching beats:', error);

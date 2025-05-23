@@ -20,6 +20,7 @@ const DownloadGate = ({ title, fileType, itemId, itemType, filePath, bucket }: D
   const [open, setOpen] = useState(false);
   const [method, setMethod] = useState<'ad' | 'email'>('ad');
   const [email, setEmail] = useState('');
+  const [consentChecked, setConsentChecked] = useState(false); // Added consent state
   const [adViewed, setAdViewed] = useState(false);
   const [adTimer, setAdTimer] = useState(5);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,8 +28,21 @@ const DownloadGate = ({ title, fileType, itemId, itemType, filePath, bucket }: D
 
   const handleOpen = () => {
     setOpen(true);
+    // Reset consent when dialog opens and method is email, or when switching to email
+    if (method === 'email') {
+      setConsentChecked(false);
+    }
     if (method === 'ad') {
       startAdTimer();
+    }
+  };
+
+  const handleMethodChange = (newMethod: 'ad' | 'email') => {
+    setMethod(newMethod);
+    if (newMethod === 'email') {
+      setConsentChecked(false); // Reset consent when switching to email method
+    } else if (newMethod === 'ad') {
+      startAdTimer(); // Start ad timer if switching to ad method
     }
   };
 
@@ -49,6 +63,17 @@ const DownloadGate = ({ title, fileType, itemId, itemType, filePath, bucket }: D
   };
 
   const handleDownload = async () => {
+    // Consent check for email method
+    if (method === 'email' && !consentChecked) {
+      toast({
+        title: "Consent Required",
+        description: "Please agree to receive emails to proceed with the download.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Email validation for email method
     if (method === 'email' && !validateEmail(email)) {
       toast({
         title: "Invalid email",
@@ -58,6 +83,7 @@ const DownloadGate = ({ title, fileType, itemId, itemType, filePath, bucket }: D
       return;
     }
     
+    // Ad viewed check for ad method
     if (method === 'ad' && !adViewed) {
       toast({
         title: "Please wait",
@@ -70,7 +96,7 @@ const DownloadGate = ({ title, fileType, itemId, itemType, filePath, bucket }: D
       setIsLoading(true);
       
       // If user chose email method, subscribe them to newsletter
-      if (method === 'email' && email) {
+      if (method === 'email' && email) { // email validation already passed if we are here
         await subscribeToNewsletter(email);
       }
       
@@ -107,7 +133,8 @@ const DownloadGate = ({ title, fileType, itemId, itemType, filePath, bucket }: D
   };
 
   const validateEmail = (email: string) => {
-    return email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    return emailRegex.test(email);
   };
 
   return (
@@ -117,7 +144,16 @@ const DownloadGate = ({ title, fileType, itemId, itemType, filePath, bucket }: D
         Download
       </Button>
       
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={(isOpen) => {
+        setOpen(isOpen);
+        if (!isOpen) { // Reset states on dialog close
+          setMethod('ad');
+          setEmail('');
+          setConsentChecked(false);
+          setAdViewed(false);
+          setAdTimer(5);
+        }
+      }}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
@@ -130,10 +166,7 @@ const DownloadGate = ({ title, fileType, itemId, itemType, filePath, bucket }: D
             <Button 
               variant={method === 'ad' ? 'default' : 'outline'} 
               className="flex-1" 
-              onClick={() => { 
-                setMethod('ad');
-                startAdTimer();
-              }}
+              onClick={() => handleMethodChange('ad')}
             >
               <Eye className="mr-2 h-4 w-4" />
               Watch Ad
@@ -142,7 +175,7 @@ const DownloadGate = ({ title, fileType, itemId, itemType, filePath, bucket }: D
             <Button 
               variant={method === 'email' ? 'default' : 'outline'} 
               className="flex-1" 
-              onClick={() => setMethod('email')}
+              onClick={() => handleMethodChange('email')}
             >
               <Mail className="mr-2 h-4 w-4" />
               Subscribe
@@ -182,8 +215,10 @@ const DownloadGate = ({ title, fileType, itemId, itemType, filePath, bucket }: D
                   <input 
                     type="checkbox" 
                     id="consent"
-                    className="mr-2" 
-                    required
+                    className="mr-2"
+                    checked={consentChecked}
+                    onChange={(e) => setConsentChecked(e.target.checked)}
+                    required 
                   />
                   <label htmlFor="consent" className="text-muted-foreground">
                     I agree to receive emails about new beats and exclusive offers

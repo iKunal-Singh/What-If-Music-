@@ -1,11 +1,11 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Heart } from 'lucide-react';
 import AudioPlayer from '../common/AudioPlayer';
 import DownloadGate from '../common/DownloadGate';
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast'; // Corrected import based on project structure
 
 interface BeatProps {
   id: string;
@@ -14,14 +14,36 @@ interface BeatProps {
   image: string;
   audio: string;
   bpm?: number;
-  key_signature?: string;
+  key?: string; // Changed from key_signature
   tags: string[];
 }
 
-const BeatCard = ({ id, title, producer, image, audio, bpm, key_signature, tags }: BeatProps) => {
+const BeatCard = ({ id, title, producer, image, audio, bpm, key, tags }: BeatProps) => { // Changed prop name
+  const [isFavorite, setIsFavorite] = useState(false);
+  const { toast } = useToast(); // Correct way to use the hook
+
   // Ensure tags is always an array
   const safelyFormattedTags = Array.isArray(tags) ? tags : 
     (typeof tags === 'string' ? [tags] : []);
+
+  const toggleFavorite = () => {
+    const newFavoriteStatus = !isFavorite;
+    setIsFavorite(newFavoriteStatus);
+    if (newFavoriteStatus) {
+      toast({
+        title: "Added to Favorites",
+        description: `"${title}" has been added to your favorites.`,
+      });
+    }
+    // Optionally, add a toast for un-favoriting if desired in the future
+    // else {
+    //   toast({
+    //     title: "Removed from Favorites",
+    //     description: `"${title}" has been removed from your favorites.`,
+    //     variant: "destructive" // Or another appropriate variant
+    //   });
+    // }
+  };
   
   return (
     <Card className="overflow-hidden music-card">
@@ -36,8 +58,13 @@ const BeatCard = ({ id, title, producer, image, audio, bpm, key_signature, tags 
             variant="secondary" 
             size="icon" 
             className="rounded-full opacity-80 hover:opacity-100"
+            onClick={toggleFavorite}
           >
-            <Heart size={16} className="text-beatwave-500" />
+            <Heart 
+              size={16} 
+              className="text-beatwave-500" 
+              fill={isFavorite ? "currentColor" : "none"} 
+            />
           </Button>
         </div>
       </div>
@@ -59,9 +86,9 @@ const BeatCard = ({ id, title, producer, image, audio, bpm, key_signature, tags 
             <span className="font-medium">BPM:</span> {bpm}
           </div>
         )}
-        {key_signature && (
+        {key && ( // Changed from key_signature
           <div className="flex items-center gap-1">
-            <span className="font-medium">Key:</span> {key_signature}
+            <span className="font-medium">Key:</span> {key} {/* Changed from key_signature */}
           </div>
         )}
       </div>
