@@ -1,5 +1,5 @@
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 
 // Types
 export interface Beat {
@@ -86,50 +86,21 @@ export const fetchCoverArt = async (): Promise<CoverArt[]> => {
   return data || [];
 };
 
-// Record a download
+// Record a download using edge function to capture IP address
 export const recordDownload = async (
   itemId: string,
   itemType: 'beat' | 'remix' | 'cover_art',
   email?: string
 ): Promise<void> => {
-  // First, increment the download count in the appropriate table
-  const tableName = itemType === 'beat' ? 'beats' : 
-                   itemType === 'remix' ? 'remixes' : 'cover_art';
-  
   try {
-    // First, fetch the current downloads count
-    const { data: itemData, error: fetchError } = await supabase
-      .from(tableName)
-      .select('downloads')
-      .eq('id', itemId)
-      .single();
-
-    if (fetchError) {
-      console.error(`Error fetching current download count:`, fetchError);
-      return;
-    }
-
-    // Then update with incremented value
-    const currentDownloads = itemData?.downloads || 0;
-    const { error: updateError } = await supabase
-      .from(tableName)
-      .update({ downloads: currentDownloads + 1 })
-      .eq('id', itemId);
-
-    if (updateError) {
-      console.error(`Error incrementing download count:`, updateError);
-    }
-
-    // Then record the download in the downloads table
-    const { error } = await supabase
-      .from('downloads')
-      .insert({
-        item_id: itemId,
-        item_type: itemType,
-        email: email,
-        user_agent: navigator.userAgent,
-        ip_address: 'client-side' // Will be replaced with the actual IP on the server
-      });
+    const { error } = await supabase.functions.invoke('record-download', {
+      body: {
+        itemId,
+        itemType,
+        email,
+        userAgent: navigator.userAgent
+      }
+    });
 
     if (error) {
       console.error('Error recording download:', error);
