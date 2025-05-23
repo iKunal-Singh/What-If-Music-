@@ -1,5 +1,5 @@
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { Beat, CoverArt, Remix } from '@/lib/api';
 
 // CRUD operations for beats

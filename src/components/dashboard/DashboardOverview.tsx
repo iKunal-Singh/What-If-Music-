@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Activity, Music, Image, Download } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { getContentStats } from '@/lib/api/content';
