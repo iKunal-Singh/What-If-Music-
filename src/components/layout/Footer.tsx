@@ -28,7 +28,7 @@ const Footer = () => {
             </p>
             <div className="flex gap-4">
               <a 
-                href="https://youtube.com" 
+                href="https://www.youtube.com/channel/UCvzFTezT7exbODaM7HJBL8Q" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-foreground/70 hover:text-beatwave-500 transition-colors"
@@ -36,7 +36,7 @@ const Footer = () => {
                 <Youtube size={20} />
               </a>
               <a 
-                href="https://instagram.com" 
+                href="https://www.instagram.com/whatifmusiic" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-foreground/70 hover:text-beatwave-500 transition-colors"
@@ -44,7 +44,7 @@ const Footer = () => {
                 <Instagram size={20} />
               </a>
               <a 
-                href="https://twitter.com" 
+                href="https://twitter.com/whatifmusiic" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-foreground/70 hover:text-beatwave-500 transition-colors"

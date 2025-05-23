@@ -1,4 +1,5 @@
-import React from "react";
+
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Music, Disc3, Image, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -7,76 +8,36 @@ import RemixCard from "@/components/remixes/RemixCard";
 import AdBanner from "@/components/common/AdBanner";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-
-// Sample data - replace with real data from backend/API
-const featuredBeats = [{
-  id: "beat1",
-  title: "Utopia Vibes",
-  producer: "BeatWave",
-  image: "/lovable-uploads/a7fff71b-527c-4120-8fec-0607c49ea7c9.png",
-  audio: "/path-to-audio.mp3", // Changed from audioUrl to audio
-  bpm: 140,
-  key_signature: "A Minor", // Changed from key to key_signature
-  tags: ["Hip Hop", "Travis Scott Type", "Dark"]
-}, {
-  id: "beat2",
-  title: "Midnight Dreams",
-  producer: "BeatWave",
-  image: "https://images.unsplash.com/photo-1511497584788-876760111969?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1642&q=80",
-  audio: "/path-to-audio.mp3", // Changed from audioUrl to audio
-  bpm: 95,
-  key_signature: "F Major", // Changed from key to key_signature
-  tags: ["Chill", "Drake Type", "R&B"]
-}, {
-  id: "beat3",
-  title: "Future Bounce",
-  producer: "BeatWave",
-  image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2574&q=80",
-  audio: "/path-to-audio.mp3", // Changed from audioUrl to audio
-  bpm: 128,
-  key_signature: "G Minor", // Changed from key to key_signature
-  tags: ["Techno", "EDM", "Club"]
-}, {
-  id: "beat4",
-  title: "Mellow Sunset",
-  producer: "BeatWave",
-  image: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80",
-  audio: "/path-to-audio.mp3", // Changed from audioUrl to audio
-  bpm: 90,
-  key_signature: "C Major", // Changed from key to key_signature
-  tags: ["Lo-Fi", "Chill", "Study"]
-}];
-const featuredRemixes = [{
-  id: "remix1",
-  title: "Blinding Lights Remix",
-  remixer: "BeatWave",
-  originalArtist: "The Weeknd",
-  youtubeId: "4NRXx6U8ABQ",
-  tags: ["EDM", "Remix", "Pop"]
-}, {
-  id: "remix2",
-  title: "Savage Remix",
-  remixer: "BeatWave",
-  originalArtist: "Megan Thee Stallion",
-  youtubeId: "4NRXx6U8ABQ",
-  tags: ["Hip Hop", "Trap", "Remix"]
-}, {
-  id: "remix3",
-  title: "Levitating Remix",
-  remixer: "BeatWave",
-  originalArtist: "Dua Lipa",
-  youtubeId: "4NRXx6U8ABQ",
-  tags: ["Dance", "Pop", "Club"]
-}, {
-  id: "remix4",
-  title: "Mood Remix",
-  remixer: "BeatWave",
-  originalArtist: "24kGoldn",
-  youtubeId: "4NRXx6U8ABQ",
-  tags: ["Hip Hop", "Alternative", "Pop"]
-}];
+import { fetchBeats, fetchRemixes } from "@/lib/api";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Index = () => {
+  const [featuredBeats, setFeaturedBeats] = useState([]);
+  const [featuredRemixes, setFeaturedRemixes] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadFeaturedContent = async () => {
+      try {
+        setLoading(true);
+        const [beatsData, remixesData] = await Promise.all([
+          fetchBeats(),
+          fetchRemixes()
+        ]);
+        
+        // Get up to 4 latest beats and remixes
+        setFeaturedBeats(beatsData.slice(0, 4));
+        setFeaturedRemixes(remixesData.slice(0, 4));
+      } catch (error) {
+        console.error("Failed to load featured content:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadFeaturedContent();
+  }, []);
+
   // List of genres with their corresponding icons and colors
   const genres = [{
     name: "Hip Hop",
@@ -103,6 +64,17 @@ const Index = () => {
     icon: <Music size={24} />,
     color: "bg-pink-500"
   }];
+  
+  // Loading skeleton for cards
+  const CardSkeleton = () => (
+    <div className="flex flex-col space-y-3">
+      <Skeleton className="h-48 w-full rounded-md" />
+      <Skeleton className="h-4 w-3/4" />
+      <Skeleton className="h-4 w-1/2" />
+      <Skeleton className="h-10 w-full" />
+    </div>
+  );
+
   return (
     <div className="min-h-screen">
       <Header />
@@ -147,9 +119,6 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Genre Filters */}
-      
-      
       {/* Featured Beats Section - Improved responsive layout */}
       <section className="py-12 px-4">
         <div className="container mx-auto">
@@ -164,7 +133,29 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {featuredBeats.map(beat => <BeatCard key={beat.id} {...beat} />)}
+            {loading ? (
+              Array(4).fill(0).map((_, i) => (
+                <CardSkeleton key={`beat-skeleton-${i}`} />
+              ))
+            ) : featuredBeats.length > 0 ? (
+              featuredBeats.map(beat => (
+                <BeatCard 
+                  key={beat.id} 
+                  id={beat.id} 
+                  title={beat.title} 
+                  producer={beat.producer} 
+                  image={beat.image_url} 
+                  audio={beat.audio_url} 
+                  bpm={beat.bpm}
+                  key_signature={beat.key}
+                  tags={beat.tags}
+                />
+              ))
+            ) : (
+              <div className="col-span-full text-center text-muted-foreground py-12">
+                No beats available at the moment. Check back soon!
+              </div>
+            )}
           </div>
 
           <AdBanner type="content" className="my-12" />
@@ -185,7 +176,27 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {featuredRemixes.map(remix => <RemixCard key={remix.id} {...remix} />)}
+            {loading ? (
+              Array(4).fill(0).map((_, i) => (
+                <CardSkeleton key={`remix-skeleton-${i}`} />
+              ))
+            ) : featuredRemixes.length > 0 ? (
+              featuredRemixes.map(remix => (
+                <RemixCard 
+                  key={remix.id} 
+                  id={remix.id}
+                  title={remix.title}
+                  remixer={remix.remixer}
+                  originalArtist={remix.original_artist}
+                  youtubeId={remix.youtube_id}
+                  tags={remix.tags}
+                />
+              ))
+            ) : (
+              <div className="col-span-full text-center text-muted-foreground py-12">
+                No remixes available at the moment. Check back soon!
+              </div>
+            )}
           </div>
         </div>
       </section>

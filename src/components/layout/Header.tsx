@@ -66,7 +66,7 @@ const Header = () => {
             </Button>
             
             <a 
-              href="https://youtube.com/channel/your-channel" 
+              href="https://www.youtube.com/channel/UCvzFTezT7exbODaM7HJBL8Q" 
               target="_blank" 
               rel="noopener noreferrer"
               aria-label="Subscribe to our YouTube channel"
@@ -111,7 +111,7 @@ const Header = () => {
                 Support Us
               </Button>
               <a 
-                href="https://youtube.com/channel/your-channel" 
+                href="https://www.youtube.com/channel/UCvzFTezT7exbODaM7HJBL8Q" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="mt-4"
