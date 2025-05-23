@@ -11,6 +11,7 @@ import { useQuery } from '@tanstack/react-query';
 import { searchContent } from '@/lib/api/dashboard';
 import { useDebounce } from '@/hooks/use-debounce';
 import APIErrorBoundary from '../common/APIErrorBoundary';
+import { toast } from 'sonner'; // Import toast
 
 const DashboardContent = () => {
   const [activeTab, setActiveTab] = useState('beats');
@@ -22,6 +23,9 @@ const DashboardContent = () => {
     queryKey: ['content-search', debouncedSearchTerm],
     queryFn: () => searchContent(debouncedSearchTerm),
     enabled: debouncedSearchTerm.length >= 2,
+    onError: (error: Error) => { // Add onError handler
+      toast.error(`Search failed: ${error.message}`);
+    },
   });
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {

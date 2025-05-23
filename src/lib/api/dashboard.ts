@@ -25,7 +25,7 @@ export const fetchDashboardStats = async () => {
     };
   } catch (error) {
     console.error('Error fetching dashboard stats:', error);
-    toast.error('Failed to load dashboard statistics');
+    // toast.error('Failed to load dashboard statistics'); // Removed
     throw error;
   }
 };
@@ -51,7 +51,7 @@ export const fetchRecentDownloads = async (limit = 10) => {
     return data || [];
   } catch (error) {
     console.error('Error fetching recent downloads:', error);
-    toast.error('Failed to load recent download activity');
+    // toast.error('Failed to load recent download activity'); // Removed
     throw error;
   }
 };
@@ -84,7 +84,7 @@ export const fetchTopDownloads = async (limit = 5) => {
     };
   } catch (error) {
     console.error('Error fetching top downloads:', error);
-    toast.error('Failed to load top downloaded content');
+    // toast.error('Failed to load top downloaded content'); // Removed
     throw error;
   }
 };
@@ -117,7 +117,7 @@ export const searchContent = async (query: string) => {
     };
   } catch (error) {
     console.error('Error searching content:', error);
-    toast.error('Search failed');
+    // toast.error('Search failed'); // Removed
     throw error;
   }
 };

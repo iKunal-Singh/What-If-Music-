@@ -160,6 +160,7 @@ export interface Database {
           avatar_url: string | null
           created_at: string
           updated_at: string
+          role: 'admin' | 'editor' | 'user'; // Added role
         }
         Insert: {
           id: string
@@ -167,6 +168,7 @@ export interface Database {
           avatar_url?: string | null
           created_at?: string
           updated_at?: string
+          role?: 'admin' | 'editor' | 'user' | null; // Added role
         }
         Update: {
           id?: string
@@ -174,6 +176,7 @@ export interface Database {
           avatar_url?: string | null
           created_at?: string
           updated_at?: string
+          role?: 'admin' | 'editor' | 'user' | null; // Added role
         }
       }
       newsletter_subscribers: {
