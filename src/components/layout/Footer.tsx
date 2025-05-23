@@ -5,9 +5,32 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Music, Youtube, Instagram, Twitter, Heart } from "lucide-react";
 import DonateModal from "../common/DonateModal";
+import { subscribeToNewsletter } from "@/lib/api"; 
+import { toast } from "sonner";
 
 const Footer = () => {
   const [donateModalOpen, setDonateModalOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  
+  const handleSubscribe = async () => {
+    if (!email || !email.includes('@')) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+    
+    setIsSubscribing(true);
+    try {
+      await subscribeToNewsletter(email);
+      toast.success('Thank you for subscribing to our newsletter!');
+      setEmail(''); // Clear the input after successful subscription
+    } catch (error) {
+      console.error('Subscription error:', error);
+      toast.error('Failed to subscribe. Please try again later.');
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
   
   return (
     <footer className="bg-card border-t border-border mt-12 pt-12 pb-6">
@@ -148,9 +171,16 @@ const Footer = () => {
                 type="email" 
                 placeholder="Your email" 
                 className="bg-secondary/50" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSubscribe()}
               />
-              <Button className="shrink-0">
-                Subscribe
+              <Button 
+                className="shrink-0" 
+                onClick={handleSubscribe}
+                disabled={isSubscribing}
+              >
+                {isSubscribing ? 'Subscribing...' : 'Subscribe'}
               </Button>
             </div>
             
