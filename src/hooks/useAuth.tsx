@@ -1,13 +1,24 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
+// Define UserProfile interface
+export interface UserProfile {
+  id: string;
+  role: string | null;
+  // Add other profile fields here if needed in the future
+  username?: string; 
+  avatar_url?: string;
+}
+
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true); // For initial session/user loading
+  const [isLoadingProfile, setIsLoadingProfile] = useState(false); // For profile data loading
 
   // Authentication methods
   const signIn = async (email: string, password: string) => {
@@ -63,40 +74,94 @@ export function useAuth() {
     let isMounted = true;
     
     console.log('Auth hook initializing');
-    
-    // First, setup the auth state change listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, currentSession) => {
-      console.log(`Auth state changed: ${event}`, currentSession?.user?.email || 'no session');
-      
-      if (isMounted) {
-        setSession(currentSession);
-        setUser(currentSession?.user ?? null);
-        setLoading(false);
+
+    const fetchUserProfile = async (userId: string) => {
+      if (!userId) {
+        setUserProfile(null);
+        setIsLoadingProfile(false);
+        return;
       }
-    });
-    
-    // Then, get the initial session
-    const getInitialSession = async () => {
+      setIsLoadingProfile(true);
       try {
-        console.log("Checking for initial session...");
-        const { data } = await supabase.auth.getSession();
-        console.log("Initial session check:", data.session?.user?.email || 'no session');
-        
-        if (isMounted) {
-          setSession(data.session);
-          setUser(data.session?.user ?? null);
-          // Important: make sure to set loading to false
-          setLoading(false);
+        const { data, error, status } = await supabase
+          .from('profiles')
+          .select(`id, role, username, avatar_url`)
+          .eq('id', userId)
+          .single();
+
+        if (error && status !== 406) { // 406: Not found, which is fine if profile not created yet
+          console.error('Error fetching user profile:', error);
+          toast.error('Error fetching user profile.');
+          setUserProfile(null);
+        } else if (data) {
+          setUserProfile(data as UserProfile);
+        } else {
+          setUserProfile(null); // No profile found or other non-error case
         }
-      } catch (error) {
-        console.error('Error getting session:', error);
+      } catch (profileError) {
+        console.error('Exception fetching user profile:', profileError);
+        toast.error('Exception fetching user profile.');
+        setUserProfile(null);
+      } finally {
         if (isMounted) {
-          setLoading(false);
+          setIsLoadingProfile(false);
         }
       }
     };
     
-    getInitialSession();
+    // First, setup the auth state change listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
+      console.log(`Auth state changed: ${event}`, currentSession?.user?.id || 'no session');
+      
+      if (isMounted) {
+        setSession(currentSession);
+        const currentUser = currentSession?.user ?? null;
+        setUser(currentUser);
+        
+        if (currentUser) {
+          await fetchUserProfile(currentUser.id);
+        } else {
+          setUserProfile(null);
+          setIsLoadingProfile(false); // Ensure loading profile is false when no user
+        }
+        setLoading(false); // Auth state settled
+      }
+    });
+    
+    // Then, get the initial session and profile
+    const getInitialSessionAndProfile = async () => {
+      try {
+        console.log("Checking for initial session...");
+        setLoading(true); // Start loading for initial session check
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        console.log("Initial session check:", initialSession?.user?.id || 'no session');
+        
+        if (isMounted) {
+          setSession(initialSession);
+          const initialUser = initialSession?.user ?? null;
+          setUser(initialUser);
+
+          if (initialUser) {
+            await fetchUserProfile(initialUser.id);
+          } else {
+            setUserProfile(null);
+            setIsLoadingProfile(false);
+          }
+        }
+      } catch (error) {
+        console.error('Error getting initial session:', error);
+        if (isMounted) {
+          setUserProfile(null); // Clear profile on error
+          setIsLoadingProfile(false);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false); // Initial auth check complete
+        }
+      }
+    };
+    
+    getInitialSessionAndProfile();
     
     // Clean up
     return () => {
@@ -106,12 +171,34 @@ export function useAuth() {
     };
   }, []);
 
+  const getUserRole = useCallback((): string | null => {
+    if (isLoadingProfile || !userProfile) return null;
+    return userProfile.role ?? null;
+  }, [userProfile, isLoadingProfile]);
+
+  const hasRole = useCallback((roleOrRoles: string | string[]): boolean => {
+    if (isLoadingProfile || !userProfile || !userProfile.role) return false;
+    
+    const currentRole = userProfile.role;
+    if (typeof roleOrRoles === 'string') {
+      return currentRole === roleOrRoles;
+    }
+    if (Array.isArray(roleOrRoles)) {
+      return roleOrRoles.includes(currentRole);
+    }
+    return false;
+  }, [userProfile, isLoadingProfile]);
+
   return {
     user,
     session,
-    loading,
+    userProfile,
+    loading, // This is for the initial auth user/session loading
+    isLoadingProfile, // This is specifically for profile data loading
     signIn,
     signUp,
-    signOut
+    signOut,
+    getUserRole,
+    hasRole,
   };
 }
