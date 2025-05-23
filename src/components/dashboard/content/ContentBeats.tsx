@@ -1,7 +1,8 @@
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuthContext } from '@/context/AuthContext'; // Import useAuthContext
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -27,7 +28,12 @@ const ContentBeats = ({ searchResults, isSearching, searchTerm = '' }: ContentBe
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [beatToDelete, setBeatToDelete] = useState<Beat | null>(null);
   
+  const { hasRole, isLoadingProfile, user } = useAuthContext(); // Get auth context
   const queryClient = useQueryClient();
+
+  // Memoize role checks
+  const canAddEdit = useMemo(() => !isLoadingProfile && hasRole(['admin', 'editor']), [isLoadingProfile, hasRole]);
+  const canDelete = useMemo(() => !isLoadingProfile && hasRole('admin'), [isLoadingProfile, hasRole]);
 
   // Fetch beats with React Query
   const { data: beats = [], isLoading, refetch } = useQuery({
@@ -96,13 +102,15 @@ const ContentBeats = ({ searchResults, isSearching, searchTerm = '' }: ContentBe
           <h2 className="text-xl font-semibold">
             {searchTerm ? `Search Results: ${searchTerm}` : 'Beats List'}
           </h2>
-          <Button className="gap-1" onClick={handleCreateClick}>
-            <Plus size={16} />
-            Add New Beat
-          </Button>
+          {canAddEdit && (
+            <Button className="gap-1" onClick={handleCreateClick}>
+              <Plus size={16} />
+              Add New Beat
+            </Button>
+          )}
         </div>
 
-        {isLoadingBeats ? (
+        {isLoadingBeats || isLoadingProfile ? ( // Also consider isLoadingProfile for initial UI state
           <div className="space-y-4">
             {Array(3).fill(0).map((_, i) => (
               <div key={i} className="flex space-y-2">
@@ -169,17 +177,21 @@ const ContentBeats = ({ searchResults, isSearching, searchTerm = '' }: ContentBe
                               <Eye size={16} />
                             </a>
                           </Button>
-                          <Button variant="ghost" size="icon" onClick={() => handleEditClick(beat)}>
-                            <Edit size={16} />
-                          </Button>
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            className="text-destructive hover:text-destructive"
-                            onClick={() => handleDeleteClick(beat)}
-                          >
-                            <Trash2 size={16} />
-                          </Button>
+                          {canAddEdit && (
+                            <Button variant="ghost" size="icon" onClick={() => handleEditClick(beat)}>
+                              <Edit size={16} />
+                            </Button>
+                          )}
+                          {canDelete && (
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="text-destructive hover:text-destructive"
+                              onClick={() => handleDeleteClick(beat)}
+                            >
+                              <Trash2 size={16} />
+                            </Button>
+                          )}
                         </div>
                       </TableCell>
                     </TableRow>

@@ -9,71 +9,62 @@ import { useQuery } from '@tanstack/react-query';
 
 interface User {
   id: string;
-  email?: string;
+  username?: string; // Now directly on User object
+  avatar_url?: string; // Now directly on User object
   created_at: string;
-  last_sign_in_at?: string;
-  profile?: {
-    username?: string;
-    avatar_url?: string;
-  };
+  role?: string; // Added role
+  // email and last_sign_in_at are not returned by the new function
 }
 
 const fetchUserData = async () => {
   try {
-    // Call our edge function that will use service role to get users
-    // If you don't have this edge function, it will fall back to profiles
-    const { data: usersData, error: usersError } = await supabase.functions.invoke('list-users');
+    // Call our new edge function to get users with roles
+    const { data: usersData, error: usersError } = await supabase.functions.invoke('list-users-with-roles');
     
-    if (usersError || !usersData) {
-      console.log("Falling back to profiles data");
-      
-      // Fallback to profiles if edge function fails or doesn't exist
-      const { data: profilesData, error: profilesError } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(10);
-      
-      if (profilesError) throw profilesError;
-      
-      // Transform into user objects
-      return profilesData.map((profile: any) => ({
-        id: profile.id,
-        created_at: profile.created_at,
-        profile: {
-          username: profile.username,
-          avatar_url: profile.avatar_url
-        }
-      }));
+    if (usersError) {
+      console.error('Error invoking list-users-with-roles function:', usersError);
+      throw usersError;
     }
     
-    return usersData;
+    if (!usersData) {
+      console.warn('No data returned from list-users-with-roles function');
+      return [];
+    }
+    
+    // The data from the function is expected to be an array of users
+    // with id, username, avatar_url, created_at, role
+    return usersData.map((user: any) => ({
+      id: user.id,
+      created_at: user.created_at,
+      username: user.username,
+      avatar_url: user.avatar_url,
+      role: user.role,
+    }));
+
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.error('Error fetching users with roles:', error);
     throw error;
   }
 };
 
 const DashboardUsers = () => {
   const { data: users = [], isLoading, error } = useQuery({
-    queryKey: ['users'],
+    queryKey: ['usersWithRoles'], // Changed queryKey to reflect the new data source
     queryFn: fetchUserData
   });
 
   // Helper to get initials from username or id
   const getInitials = (user: User) => {
-    if (user.profile?.username) {
-      return user.profile.username.substring(0, 2).toUpperCase();
+    if (user.username) {
+      return user.username.substring(0, 2).toUpperCase();
     }
-    if (user.email) {
-      return user.email.substring(0, 2).toUpperCase();
-    }
+    // Removed email fallback for initials as email is not fetched
     return user.id.substring(0, 2).toUpperCase();
   };
 
   // Format date to readable format
   const formatDate = (dateString: string | undefined) => {
-    if (!dateString) return 'Never';
+    if (!dateString) return 'N/A'; // Changed from 'Never' to 'N/A' for consistency
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -111,15 +102,16 @@ const DashboardUsers = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>User</TableHead>
+                  <TableHead>Role</TableHead> {/* Added Role column */}
                   <TableHead>Joined</TableHead>
-                  <TableHead>Last Activity</TableHead>
+                  {/* <TableHead>Last Activity</TableHead> Removed Last Activity column */}
                   <TableHead>ID</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {users.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center">
+                    <TableCell colSpan={4} className="text-center"> {/* Adjusted colSpan */}
                       No users found
                     </TableCell>
                   </TableRow>
@@ -129,17 +121,18 @@ const DashboardUsers = () => {
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <Avatar>
-                            <AvatarImage src={user.profile?.avatar_url || ''} />
+                            <AvatarImage src={user.avatar_url || ''} /> {/* Data directly from user object */}
                             <AvatarFallback>{getInitials(user)}</AvatarFallback>
                           </Avatar>
                           <div>
-                            <div className="font-medium">{user.profile?.username || user.email || 'Anonymous User'}</div>
-                            <div className="text-sm text-muted-foreground">{user.email || 'No email'}</div>
+                            <div className="font-medium">{user.username || 'Anonymous User'}</div> {/* Data directly from user object */}
+                            {/* Removed email display line */}
                           </div>
                         </div>
                       </TableCell>
+                      <TableCell>{user.role || 'N/A'}</TableCell> {/* Display role */}
                       <TableCell>{formatDate(user.created_at)}</TableCell>
-                      <TableCell>{formatDate(user.last_sign_in_at)}</TableCell>
+                      {/* Last Activity cell removed */}
                       <TableCell className="font-mono text-xs">{user.id.substring(0, 8)}...</TableCell>
                     </TableRow>
                   ))

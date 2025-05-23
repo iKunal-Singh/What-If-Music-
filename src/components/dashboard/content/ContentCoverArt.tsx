@@ -1,7 +1,8 @@
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuthContext } from '@/context/AuthContext'; // Import useAuthContext
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -28,7 +29,12 @@ const ContentCoverArt = ({ searchResults, isSearching, searchTerm = '' }: Conten
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [coverArtToDelete, setCoverArtToDelete] = useState<CoverArt | null>(null);
   
+  const { hasRole, isLoadingProfile } = useAuthContext(); // Get auth context
   const queryClient = useQueryClient();
+
+  // Memoize role checks
+  const canAddEdit = useMemo(() => !isLoadingProfile && hasRole(['admin', 'editor']), [isLoadingProfile, hasRole]);
+  const canDelete = useMemo(() => !isLoadingProfile && hasRole('admin'), [isLoadingProfile, hasRole]);
 
   // Fetch cover arts with React Query
   const { data: coverArts = [], isLoading, refetch } = useQuery({
@@ -97,13 +103,15 @@ const ContentCoverArt = ({ searchResults, isSearching, searchTerm = '' }: Conten
           <h2 className="text-xl font-semibold">
             {searchTerm ? `Search Results: ${searchTerm}` : 'Cover Art List'}
           </h2>
-          <Button className="gap-1" onClick={handleCreateClick}>
-            <Plus size={16} />
-            Add New Cover Art
-          </Button>
+          {canAddEdit && (
+            <Button className="gap-1" onClick={handleCreateClick}>
+              <Plus size={16} />
+              Add New Cover Art
+            </Button>
+          )}
         </div>
 
-        {isLoadingCoverArts ? (
+        {isLoadingCoverArts || isLoadingProfile ? ( // Also consider isLoadingProfile for initial UI state
           <div className="space-y-4">
             {Array(3).fill(0).map((_, i) => (
               <div key={i} className="flex space-y-2">
@@ -173,17 +181,21 @@ const ContentCoverArt = ({ searchResults, isSearching, searchTerm = '' }: Conten
                               <Eye size={16} />
                             </a>
                           </Button>
-                          <Button variant="ghost" size="icon" onClick={() => handleEditClick(art)}>
-                            <Edit size={16} />
-                          </Button>
-                          <Button 
-                            variant="ghost" 
-                            size="icon"
-                            className="text-destructive hover:text-destructive"
-                            onClick={() => handleDeleteClick(art)}
-                          >
-                            <Trash2 size={16} />
-                          </Button>
+                          {canAddEdit && (
+                            <Button variant="ghost" size="icon" onClick={() => handleEditClick(art)}>
+                              <Edit size={16} />
+                            </Button>
+                          )}
+                          {canDelete && (
+                            <Button 
+                              variant="ghost" 
+                              size="icon"
+                              className="text-destructive hover:text-destructive"
+                              onClick={() => handleDeleteClick(art)}
+                            >
+                              <Trash2 size={16} />
+                            </Button>
+                          )}
                         </div>
                       </TableCell>
                     </TableRow>
