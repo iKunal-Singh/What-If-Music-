@@ -12,13 +12,17 @@ interface BeatProps {
   title: string;
   producer: string;
   image: string;
-  audio: string;  // Changed from audioUrl to match usage
-  bpm?: number;    // Made optional with ?
-  key_signature?: string;  // Changed from key to match usage
+  audio: string;
+  bpm?: number;
+  key_signature?: string;
   tags: string[];
 }
 
 const BeatCard = ({ id, title, producer, image, audio, bpm, key_signature, tags }: BeatProps) => {
+  // Ensure tags is always an array
+  const safelyFormattedTags = Array.isArray(tags) ? tags : 
+    (typeof tags === 'string' ? [tags] : []);
+  
   return (
     <Card className="overflow-hidden music-card">
       <div className="aspect-video relative overflow-hidden rounded-md mb-3">
@@ -42,7 +46,7 @@ const BeatCard = ({ id, title, producer, image, audio, bpm, key_signature, tags 
       <p className="text-xs text-muted-foreground mb-2">by {producer}</p>
       
       <div className="flex flex-wrap gap-1 mb-2">
-        {tags.slice(0, 2).map((tag) => (
+        {safelyFormattedTags.slice(0, 2).map((tag) => (
           <span key={tag} className="beat-tag text-xs">
             {tag}
           </span>

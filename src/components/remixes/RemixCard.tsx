@@ -14,6 +14,10 @@ interface RemixProps {
 }
 
 const RemixCard = ({ id, title, remixer, originalArtist, youtubeId, tags }: RemixProps) => {
+  // Ensure tags is always an array
+  const safelyFormattedTags = Array.isArray(tags) ? tags : 
+    (typeof tags === 'string' ? [tags] : []);
+    
   // File path would be the relative path within the storage bucket
   const filePath = `${id}/${title.toLowerCase().replace(/\s+/g, '-')}.mp3`;
 
@@ -37,7 +41,7 @@ const RemixCard = ({ id, title, remixer, originalArtist, youtubeId, tags }: Remi
       </p>
       
       <div className="flex flex-wrap gap-1 mb-3">
-        {tags.map((tag) => (
+        {safelyFormattedTags.map((tag) => (
           <span key={tag} className="beat-tag">
             {tag}
           </span>

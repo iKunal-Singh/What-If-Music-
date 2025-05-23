@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
@@ -15,14 +15,91 @@ const AudioPlayer = ({ audioUrl, title, artist, minimal = false }: AudioPlayerPr
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [volume, setVolume] = useState(1);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // Initialize audio element
+  useEffect(() => {
+    // Create audio element
+    const audio = new Audio(audioUrl);
+    audioRef.current = audio;
+    
+    // Set up event listeners
+    audio.addEventListener('loadedmetadata', () => {
+      setDuration(audio.duration);
+    });
+    
+    audio.addEventListener('timeupdate', () => {
+      setCurrentTime(audio.currentTime);
+      setProgress((audio.currentTime / audio.duration) * 100);
+    });
+    
+    audio.addEventListener('ended', () => {
+      setIsPlaying(false);
+      setProgress(0);
+      setCurrentTime(0);
+    });
+
+    // Clean up
+    return () => {
+      audio.pause();
+      audio.src = '';
+      audio.removeEventListener('loadedmetadata', () => {});
+      audio.removeEventListener('timeupdate', () => {});
+      audio.removeEventListener('ended', () => {});
+    };
+  }, [audioUrl]);
+
+  // Handle play/pause
   const togglePlay = () => {
+    if (!audioRef.current) return;
+    
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play().catch(error => {
+        console.error("Error playing audio:", error);
+      });
+    }
+    
     setIsPlaying(!isPlaying);
-    // In a real implementation, this would control the audio element
   };
 
+  // Handle mute toggle
   const toggleMute = () => {
+    if (!audioRef.current) return;
+    
+    audioRef.current.muted = !isMuted;
     setIsMuted(!isMuted);
+  };
+
+  // Handle seek
+  const handleSeek = (value: number) => {
+    if (!audioRef.current) return;
+    
+    const seekTime = (value / 100) * duration;
+    audioRef.current.currentTime = seekTime;
+    setProgress(value);
+    setCurrentTime(seekTime);
+  };
+
+  // Handle volume change
+  const handleVolumeChange = (value: number) => {
+    if (!audioRef.current) return;
+    
+    audioRef.current.volume = value / 100;
+    setVolume(value / 100);
+    
+    // If volume is set to 0, mute; if unmuting, set volume back
+    if (value === 0) {
+      setIsMuted(true);
+      audioRef.current.muted = true;
+    } else if (isMuted) {
+      setIsMuted(false);
+      audioRef.current.muted = false;
+    }
   };
 
   // Wave animation bars (shown when playing)
@@ -76,16 +153,16 @@ const AudioPlayer = ({ audioUrl, title, artist, minimal = false }: AudioPlayerPr
           
           <div className="mt-2">
             <Slider
-              defaultValue={[progress]}
+              value={[progress]}
               max={100}
               step={1}
               className="cursor-pointer"
-              onValueChange={(val) => setProgress(val[0])}
+              onValueChange={(val) => handleSeek(val[0])}
             />
           </div>
           
           <div className="flex justify-between text-xs text-muted-foreground mt-1">
-            <span>{formatTime(progress * 3)}</span>
+            <span>{formatTime(currentTime)}</span>
             <div className="flex items-center gap-2">
               <Button 
                 variant="ghost" 
@@ -95,7 +172,7 @@ const AudioPlayer = ({ audioUrl, title, artist, minimal = false }: AudioPlayerPr
               >
                 {isMuted ? <VolumeX size={12} /> : <Volume2 size={12} />}
               </Button>
-              <span>3:00</span>
+              <span>{formatTime(duration)}</span>
             </div>
           </div>
         </div>
