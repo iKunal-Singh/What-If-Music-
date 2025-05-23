@@ -4,7 +4,7 @@ import { AlertCircle } from 'lucide-react';
 
 interface Props {
   children: ReactNode;
-  fallback?: ReactNode;
+  fallback?: (error: Error, resetErrorBoundary: () => void) => ReactNode;
 }
 
 interface State {
@@ -32,11 +32,15 @@ class ErrorBoundary extends Component<Props, State> {
     console.error("Error caught by ErrorBoundary:", error, errorInfo);
   }
 
+  resetErrorBoundary = (): void => {
+    this.setState({ hasError: false, error: null });
+  }
+
   render(): ReactNode {
     if (this.state.hasError) {
       // You can render any custom fallback UI
       if (this.props.fallback) {
-        return this.props.fallback;
+        return this.props.fallback(this.state.error!, this.resetErrorBoundary);
       }
       
       return (
