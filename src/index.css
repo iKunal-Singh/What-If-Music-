@@ -93,22 +93,6 @@
   body {
     @apply bg-background text-foreground dark;
     font-feature-settings: "rlig" 1, "calt" 1;
-    /* Performance optimizations */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-  }
-
-  /* Enhanced performance for animations */
-  *, *::before, *::after {
-    will-change: auto;
-  }
-
-  /* Optimize animations for GPU acceleration */
-  .gpu-accelerated {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    perspective: 1000px;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -150,44 +134,16 @@
   }
 
   .music-card {
-    @apply bg-card rounded-lg p-4 transition-all duration-200 border border-border border-opacity-30 gpu-accelerated;
+    @apply bg-card rounded-lg p-4 hover:scale-[1.01] transition-all duration-200 border border-border border-opacity-30;
   }
   
   .music-card:hover {
     @apply border-beatwave-500;
-    box-shadow: 0 0 20px rgba(227, 66, 52, 0.3);
-    transform: translateY(-4px);
+    box-shadow: 0 0 10px rgba(227, 66, 52, 0.3);
   }
 
   .beat-tag {
     @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground hover:bg-beatwave-500 hover:text-white cursor-pointer transition-all;
-  }
-
-  /* Enhanced gradient animations */
-  .gradient-text {
-    background: linear-gradient(45deg, #E34234, #8B5CF6, #E34234);
-    background-size: 200% auto;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: gradientShift 3s ease-in-out infinite;
-  }
-
-  /* Parallax container */
-  .parallax-container {
-    height: 100vh;
-    overflow-x: hidden;
-    overflow-y: auto;
-    perspective: 1px;
-  }
-
-  .parallax-element {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    transform: translateZ(-1px) scale(2);
   }
 }
 
@@ -196,88 +152,31 @@
     @apply bg-secondary/30 backdrop-blur-lg border border-white/10 rounded-xl;
   }
   
-  /* Enhanced animation utilities */
+  /* Modern UI effect classes */
   .animated-gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-beatwave-400 via-purple-500 to-beatwave-600;
-    background-size: 200% auto;
-    animation: gradientShift 5s linear infinite;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-beatwave-400 via-purple-500 to-beatwave-600 animate-text-gradient;
   }
   
   .hover-glow {
-    @apply transition-all duration-300 gpu-accelerated;
+    @apply transition-all duration-300;
   }
   
   .hover-glow:hover {
-    filter: drop-shadow(0 0 10px theme('colors.beatwave.500'));
-    transform: translateY(-2px);
+    filter: drop-shadow(0 0 5px theme('colors.beatwave.500'));
   }
-
-  /* Optimized animations */
-  .fade-in-up {
-    animation: fadeInUp 0.6s ease-out forwards;
+  
+  .animate-text-gradient {
+    background-size: 200% auto;
+    animation: textGradient 5s linear infinite;
   }
-
-  .scale-in {
-    animation: scaleIn 0.3s ease-out forwards;
-  }
-
-  .slide-in-left {
-    animation: slideInLeft 0.5s ease-out forwards;
-  }
-
-  /* Performance-optimized reveal animation */
-  .reveal-animation {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-
-  .reveal-animation.revealed {
-    opacity: 1;
-    transform: translateY(0);
+  
+  @keyframes textGradient {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
   }
 }
 
-/* Enhanced keyframe animations */
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
+/* New UI effect animations */
 @keyframes float {
   0% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
@@ -293,8 +192,8 @@
     box-shadow: 0 0 5px theme('colors.beatwave.500');
   }
   50% { 
-    box-shadow: 0 0 20px theme('colors.beatwave.500'),
-                0 0 40px theme('colors.beatwave.400');
+    box-shadow: 0 0 15px theme('colors.beatwave.500'),
+                0 0 30px theme('colors.beatwave.400');
   }
 }
 
@@ -319,31 +218,4 @@
     rgba(255,255,255,0) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
-}
-
-/* Reduced motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* Enhanced scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: hsl(var(--secondary));
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, hsl(var(--beatwave-500)), hsl(var(--beatwave-600)));
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, hsl(var(--beatwave-600)), hsl(var(--beatwave-700)));
 }
